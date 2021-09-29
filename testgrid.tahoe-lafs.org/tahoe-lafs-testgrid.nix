@@ -36,29 +36,32 @@ in {
       introducer = "pb://fodk4doc64febdoxke3a4ddfyanz7ajd@tcp:157.90.125.177:5000/el4fo3rm2h22cnilukmjqzyopdgqxrd2";
     in {
       alpha = {
-        inherit package introducer;
+        inherit package;
         nickname = "alpha-storage";
         # XXX NixOS module requires we configure a web port even if we don't
         # want one.
         web.port = 2002;
         storage.enable = true;
         tub.port = 5002;
+        client.introducer = introducer;
       };
       beta = {
-        inherit package introducer;
+        inherit package;
         nickname = "beta-storage";
         # XXX
         web.port = 2003;
         storage.enable = true;
         tub.port = 5003;
+        client.introducer = introducer;
       };
       gamma = {
-        inherit package introducer;
+        inherit package;
         nickname = "gamma-storage";
         # XXX
         web.port = 2004;
         storage.enable = true;
         tub.port = 5004;
+        client.introducer = introducer;
       };
     };
   };
