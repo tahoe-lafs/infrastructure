@@ -43,6 +43,22 @@ in {
     };
   };
 
+  # XXX The NixOS Tahoe service doesn't set these and NixOS gets angry.
+  users.users.tahoe.alpha.group = "tahoe.alpha";
+  users.groups."tahoe.alpha" = {};
+
+  users.users.tahoe.beta.group = "tahoe.beta";
+  users.groups."tahoe.beta" = {};
+
+  users.users.tahoe.gamma.group = "tahoe.gamma";
+  users.groups."tahoe.gamma" = {};
+
+  users.users.tahoe.introducer-alpha.group = "tahoe.introducer-alpha";
+  users.groups."tahoe.introducer-alpha" = {};
+
+  users.users.tahoe.introducer-beta.group = "tahoe.introducer-beta";
+  users.groups."tahoe.introducer-beta" = {};
+
   networking.firewall.allowedTCPPorts = with config.services.tahoe; [
     # Let traffic through to the introducers
     introducers.alpha.tub.port
