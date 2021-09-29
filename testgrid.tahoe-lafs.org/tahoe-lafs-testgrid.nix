@@ -15,10 +15,12 @@ in {
       # Just have them listen on different ports.
       alpha = {
         inherit package;
+        nickname = "alpha-introducer";
         tub.port = 5000;
       };
       beta = {
         inherit package;
+        nickname = "beta-introducer";
         tub.port = 5001;
       };
     };
@@ -31,18 +33,21 @@ in {
     nodes = {
       alpha = {
         inherit package;
+        nickname = "alpha-storage";
         web.port = null;
         storage.enable = true;
         tub.port = 5002;
       };
       beta = {
         inherit package;
+        nickname = "beta-storage";
         web.port = null;
         storage.enable = true;
         tub.port = 5003;
       };
       gamma = {
         inherit package;
+        nickname = "gamma-storage";
         web.port = null;
         storage.enable = true;
         tub.port = 5004;
