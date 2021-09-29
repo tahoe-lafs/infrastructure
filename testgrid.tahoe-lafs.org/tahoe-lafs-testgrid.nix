@@ -1,7 +1,12 @@
 # Define a NixOS module that sets up the Tahoe-LAFS test grid.
-{ config, ... }: {
+{ config, pkgs, ... }: {
   # Configure Tahoe to run here.
   services.tahoe = {
+    # Use upstream packaging.  The NixOS 21.05 package is broken (though
+    # master should already have a fix for that).  However, maybe we want to
+    # run bleeding edge on this deployment anyway.
+    package = pkgs.callPackage ./tahoe-lafs.nix { };
+
     # Run two introducers so folks can play around with the multi-introducer
     # support if they want.
     introducers = {
