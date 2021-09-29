@@ -12,10 +12,15 @@ in {
     # Run two introducers so folks can play around with the multi-introducer
     # support if they want.
     introducers = {
-      inherit package;
       # Just have them listen on different ports.
-      alpha.tub.port = 5000;
-      beta.tub.port = 5001;
+      alpha = {
+        inherit package;
+        tub.port = 5000;
+      };
+      beta = {
+        inherit package;
+        tub.port = 5001;
+      };
     };
 
     # Run three storage nodes.  They all share available storage space on this
@@ -24,18 +29,20 @@ in {
     # separately from other to make their failure modes as independent as
     # possible.
     nodes = {
-      inherit package;
       alpha = {
+        inherit package;
         web.port = null;
         storage.enable = true;
         tub.port = 5002;
       };
       beta = {
+        inherit package;
         web.port = null;
         storage.enable = true;
         tub.port = 5003;
       };
       gamma = {
+        inherit package;
         web.port = null;
         storage.enable = true;
         tub.port = 5004;
