@@ -11,5 +11,5 @@
 
     # Configure the rest of the system
     ./system-configuration.nix
-  ]
+  ];
 }
