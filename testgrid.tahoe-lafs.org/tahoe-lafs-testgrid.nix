@@ -34,21 +34,25 @@ in {
       alpha = {
         inherit package;
         nickname = "alpha-storage";
-        web.port = null;
+        # XXX NixOS module requires we configure a web port even if we don't
+        # want one.
+        web.port = 2002;
         storage.enable = true;
         tub.port = 5002;
       };
       beta = {
         inherit package;
         nickname = "beta-storage";
-        web.port = null;
+        # XXX
+        web.port = 2003;
         storage.enable = true;
         tub.port = 5003;
       };
       gamma = {
         inherit package;
         nickname = "gamma-storage";
-        web.port = null;
+        # XXX
+        web.port = 2004;
         storage.enable = true;
         tub.port = 5004;
       };
