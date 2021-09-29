@@ -9,6 +9,6 @@ let
   # your working directory is a checkout of tahoe-lafs.
   #
   repo = import ./repo-tahoe-lafs-master.nix;
-  tahoe-lafs = callPackage "${repo}/nix" { };
+  tahoe-lafs = callPackage "${repo}/nix/py3.nix" { };
 in
   tahoe-lafs
