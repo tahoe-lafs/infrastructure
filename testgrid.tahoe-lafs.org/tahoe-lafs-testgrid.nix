@@ -30,9 +30,13 @@ in {
     # client.  On a more realistic deployment these would all be run
     # separately from other to make their failure modes as independent as
     # possible.
-    nodes = {
+    nodes =
+    let
+      # XXX NixOS module doesn't support multi-introducer configuration.
+      introducer = "pb://fodk4doc64febdoxke3a4ddfyanz7ajd@tcp:157.90.125.177:5000/el4fo3rm2h22cnilukmjqzyopdgqxrd2";
+    in {
       alpha = {
-        inherit package;
+        inherit package introducer;
         nickname = "alpha-storage";
         # XXX NixOS module requires we configure a web port even if we don't
         # want one.
@@ -41,7 +45,7 @@ in {
         tub.port = 5002;
       };
       beta = {
-        inherit package;
+        inherit package introducer;
         nickname = "beta-storage";
         # XXX
         web.port = 2003;
@@ -49,7 +53,7 @@ in {
         tub.port = 5003;
       };
       gamma = {
-        inherit package;
+        inherit package introducer;
         nickname = "gamma-storage";
         # XXX
         web.port = 2004;
