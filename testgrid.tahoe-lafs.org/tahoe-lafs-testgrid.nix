@@ -42,8 +42,7 @@ in {
         # want one.
         web.port = 2002;
         storage.enable = true;
-        tub.location = config.networking.fqdn;
-        tub.port = 5002;
+        tub.location = "${config.networking.fqdn}:5002";
         client.introducer = introducer;
       };
       beta = {
@@ -52,8 +51,7 @@ in {
         # XXX
         web.port = 2003;
         storage.enable = true;
-        tub.location = config.networking.fqdn;
-        tub.port = 5003;
+        tub.location = "${config.networking.fqdn}:5003";
         client.introducer = introducer;
       };
       gamma = {
@@ -62,8 +60,7 @@ in {
         # XXX
         web.port = 2004;
         storage.enable = true;
-        tub.location = config.networking.fqdn;
-        tub.port = 5004;
+        tub.location = "${config.networking.fqdn}:5004";
         client.introducer = introducer;
       };
     };
