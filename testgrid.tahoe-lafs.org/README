@@ -1,0 +1,6 @@
+To deploy::
+
+  ssh root@157.90.125.177 'cd infrastructure; git pull; nixos-rebuild switch'
+
+There are other tools to manage NixOS deployments.
+This approach as the advantage that the deployer only needs one piece of common software installed (``ssh``).

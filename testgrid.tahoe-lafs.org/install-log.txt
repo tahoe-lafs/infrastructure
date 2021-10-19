@@ -1,0 +1,26 @@
+* Created vm running Ubuntu
+* Started following https://github.com/nix-community/nixos-install-scripts/blob/cb09b52de856eb561d2b6db50c045c0ce58d75f5/hosters/hetzner-cloud/nixos-install-hetzner-cloud.sh
+  * Mounted nixos-minimal-21.05.3314.83413f47809-x86_64-linux.iso using web ui
+  * According to Heztner docs::
+
+      Rebooting your server while a ISO image is mounted will cause it to boot from the image.
+
+    Logged in as root and ran `reboot`
+
+  * Prompted for root password after server rebooted, didn't have it
+  * Unmounted ISO and power cycled using web ui
+  * Logged in as root and used `passwd` to change password
+  * Re-mounted ISO
+  * Logged in as root and ran `reboot`
+  * Prompted for root password after server rebooted and system did not accept the new root password
+  * Asked #NixOS for help, they suggested looking at the kvm instead.
+  * Opened Hetzner web console, saw nixos user already logged in
+  * Set nixos password and tried to log in via ssh, password refused
+  * Installed my ssh keys in nixos user's authorized_keys and tried to log in via ssh, success
+  * Downloaded nixos-install-hetzner-cloud.sh
+  * Edited to put my key in place
+  * Ran w/ sudo
+  * Waited for poweroff
+  * Unmounted ISO via web ui
+  * Powered on via web ui
+  * Logged in as root w/ my key to nixos 21.05 system
