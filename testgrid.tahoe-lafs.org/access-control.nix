@@ -3,6 +3,7 @@
   users.users.root.initialHashedPassword = "";
   services.openssh.permitRootLogin = "prohibit-password";
 
+  # Enable the OpenSSH daemon.
   services.openssh.enable = true;
 
   users.users.root.openssh.authorizedKeys.keys = [

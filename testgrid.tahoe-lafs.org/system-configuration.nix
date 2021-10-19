@@ -79,11 +79,6 @@
   #   enableSSHSupport = true;
   # };
 
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
   # Make sure the firewall is enabled.  This is probably the default but let's
   # be explicit and safe.
   networking.firewall.enable = true;
