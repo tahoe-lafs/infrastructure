@@ -69,8 +69,13 @@ in {
     };
   };
 
-  # XXX The NixOS Tahoe service doesn't set these and NixOS gets angry.
+  # XXX The NixOS Tahoe service doesn't configure any group for the service
+  # users it creates.  A user cannot be created without a group so without the
+  # following fixes, NixOS throws an error at us at evaluate time.
+
+  # For each service user, assign it to a distinct group.
   users.users."tahoe.alpha".group = "tahoe.alpha";
+  # And also create that group.
   users.groups."tahoe.alpha" = {};
 
   users.users."tahoe.beta".group = "tahoe.beta";
