@@ -32,6 +32,13 @@ in {
     # possible.
     nodes =
     let
+      # Common garbage collector configuration for all storage nodes.
+      expireConfiguration = {
+        storage."expire.enabled" = true;
+        storage."expire.mode" = "age";
+        storage."expire.override_lease_duration" = "1day";
+      };
+
       # XXX NixOS module doesn't support multi-introducer configuration.
       introducer = "pb://fodk4doc64febdoxke3a4ddfyanz7ajd@tcp:157.90.125.177:5000/el4fo3rm2h22cnilukmjqzyopdgqxrd2";
     in {
@@ -45,7 +52,7 @@ in {
         tub.location = "${config.networking.fqdn}:5002";
         tub.port = 5002;
         client.introducer = introducer;
-      };
+      } // expireConfiguration;
       beta = {
         inherit package;
         nickname = "beta-storage";
@@ -55,7 +62,7 @@ in {
         tub.location = "${config.networking.fqdn}:5003";
         tub.port = 5003;
         client.introducer = introducer;
-      };
+      } // expireConfiguration;
       gamma = {
         inherit package;
         nickname = "gamma-storage";
@@ -65,7 +72,7 @@ in {
         tub.location = "${config.networking.fqdn}:5004";
         tub.port = 5004;
         client.introducer = introducer;
-      };
+      } // expireConfiguration;
     };
   };
 
