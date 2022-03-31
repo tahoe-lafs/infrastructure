@@ -41,8 +41,16 @@
   # Enable the X11 windowing system.
   # services.xserver.enable = true;
 
+  # Periodically upgrade NixOS to the latest version.  If enabled, a systemd
+  # timer will run `nixos-rebuild switch --upgrade` once a day.
+  system.autoUpgrade = {
+    enable = true;
 
-
+    # Reboot the system into the new generation instead of a switch if the new
+    # generation uses a different kernel, kernel modules or initrd than the
+    # booted system.
+    allowReboot = true;
+  };
 
   # Configure keymap in X11
   # services.xserver.layout = "us";
