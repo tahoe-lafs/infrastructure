@@ -12,13 +12,17 @@ in {
       # Just have them listen on different ports.
       alpha = {
         inherit package;
-        nickname = "alpha-introducer";
-        tub.port = 5000;
+        settings.node = {
+          nickname = "alpha-introducer";
+          "tub.port" = 5000;
+        };
       };
       beta = {
         inherit package;
-        nickname = "beta-introducer";
-        tub.port = 5001;
+        settings.node = {
+          nickname = "beta-introducer";
+          "tub.port" = 5001;
+        };
       };
     };
 
@@ -35,37 +39,36 @@ in {
       alpha = {
         inherit package;
         settings = {
-          nickname = "alpha-storage";
-          # XXX NixOS module requires we configure a web port even if we don't
-          # want one.
-          web.port = 2002;
-          storage.enable = true;
-          tub.location = "${config.networking.fqdn}:5002";
-          tub.port = 5002;
-          client.introducer = introducer;
+          node = {
+            nickname = "alpha-storage";
+            "tub.location" = "${config.networking.fqdn}:5002";
+            "tub.port" = 5002;
+          };
+          storage.enabled = true;
+          client."introducer.furl" = introducer;
         };
       };
       beta = {
         inherit package;
         settings = {
-          nickname = "beta-storage";
-          # XXX
-          web.port = 2003;
-          storage.enable = true;
-          tub.location = "${config.networking.fqdn}:5003";
-          tub.port = 5003;
-          client.introducer = introducer;
+          node = {
+            nickname = "beta-storage";
+            "tub.location" = "${config.networking.fqdn}:5003";
+            "tub.port" = 5003;
+          };
+          storage.enabled = true;
+          client."introducer.furl" = introducer;
         };
       };
       gamma = {
         inherit package;
         settings = {
-          nickname = "gamma-storage";
-          # XXX
-          web.port = 2004;
-          storage.enable = true;
-          tub.location = "${config.networking.fqdn}:5004";
-          tub.port = 5004;
+          node = {
+            nickname = "gamma-storage";
+            "tub.location" = "${config.networking.fqdn}:5004";
+            "tub.port" = 5004;
+          };
+          storage.enabled = true;
           client.introducer = introducer;
         };
       };
@@ -74,12 +77,12 @@ in {
 
   networking.firewall.allowedTCPPorts = with config.services.tahoe; [
     # Let traffic through to the introducers
-    introducers.alpha.tub.port
-    introducers.beta.tub.port
+    introducers.alpha.settings.node."tub.port"
+    introducers.beta.settings.node."tub.port"
 
     # ... and storage servers.
-    nodes.alpha.tub.port
-    nodes.beta.tub.port
-    nodes.gamma.tub.port
+    nodes.alpha.settings.node."tub.port"
+    nodes.beta.settings.node."tub.port"
+    nodes.gamma.settings.node."tub.port"
   ];
 }
