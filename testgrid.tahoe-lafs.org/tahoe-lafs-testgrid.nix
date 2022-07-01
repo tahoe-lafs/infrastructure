@@ -1,11 +1,6 @@
 # Define a NixOS module that sets up the Tahoe-LAFS test grid.
-{ config, pkgs, ... }:
-let
-  # Use upstream packaging.  The NixOS 21.05 package is broken (though
-  # master should already have a fix for that).  However, maybe we want to
-  # run bleeding edge on this deployment anyway.
-  package = pkgs.callPackage ./tahoe-lafs.nix { };
-in {
+{ config, pkgs, tahoe-lafs, ... }:
+{
   # Configure Tahoe to run here.
   services.tahoe = {
 
@@ -14,12 +9,12 @@ in {
     introducers = {
       # Just have them listen on different ports.
       alpha = {
-        inherit package;
+        package = tahoe-lafs;
         nickname = "alpha-introducer";
         tub.port = 5000;
       };
       beta = {
-        inherit package;
+        package = tahoe-lafs;
         nickname = "beta-introducer";
         tub.port = 5001;
       };
@@ -36,7 +31,7 @@ in {
       introducer = "pb://fodk4doc64febdoxke3a4ddfyanz7ajd@tcp:157.90.125.177:5000/el4fo3rm2h22cnilukmjqzyopdgqxrd2";
     in {
       alpha = {
-        inherit package;
+        package = tahoe-lafs;
         nickname = "alpha-storage";
         # XXX NixOS module requires we configure a web port even if we don't
         # want one.
@@ -47,7 +42,7 @@ in {
         client.introducer = introducer;
       };
       beta = {
-        inherit package;
+        package = tahoe-lafs;
         nickname = "beta-storage";
         # XXX
         web.port = 2003;
@@ -57,7 +52,7 @@ in {
         client.introducer = introducer;
       };
       gamma = {
-        inherit package;
+        package = tahoe-lafs;
         nickname = "gamma-storage";
         # XXX
         web.port = 2004;
