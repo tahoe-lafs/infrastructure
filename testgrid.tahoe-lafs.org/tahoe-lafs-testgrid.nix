@@ -1,6 +1,9 @@
 # Define a NixOS module that sets up the Tahoe-LAFS test grid.
 { config, pkgs, tahoe-lafs, ... }:
 {
+  # Hide the NixOS-supplied module.
+  disabledModules = [ "tahoe" ];
+
   # Configure Tahoe to run here.
   services.tahoe = {
 
