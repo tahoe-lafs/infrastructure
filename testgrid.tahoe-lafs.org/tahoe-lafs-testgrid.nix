@@ -74,6 +74,11 @@ in {
     };
   };
 
+  # The current nixpkgs service definition isn't compatible with the upstream
+  # flake, use our own
+  disabledModules = [ "services/network-filesystems/tahoe.nix" ];
+  imports = [ ./tahoe-service.nix ];
+
   # XXX The NixOS Tahoe service doesn't configure any group for the service
   # users it creates.  A user cannot be created without a group so without the
   # following fixes, NixOS throws an error at us at evaluate time.
@@ -96,8 +101,11 @@ in {
   users.groups."tahoe.introducer-beta" = { };
 
   # Actually use the users for the different services.
-  systemd.services."tahoe.introducer-beta".serviceConfig.User = "tahoe.introducer-beta";
-  systemd.services."tahoe.introducer-beta".serviceConfig.Group = "tahoe.introducer-beta";
+  systemd.services."tahoe.introducer-beta".serviceConfig = {
+    User = "tahoe.introducer-beta";
+    Group = "tahoe.introducer-beta";
+    StateDirectory = /var/db/tahoe-lafs/introducer-beta;
+  };
 
   networking.firewall.allowedTCPPorts = with config.services.tahoe; [
     # Let traffic through to the introducers
