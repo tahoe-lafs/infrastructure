@@ -95,6 +95,10 @@ in {
   users.users."tahoe.introducer-beta".group = "tahoe.introducer-beta";
   users.groups."tahoe.introducer-beta" = { };
 
+  # Actually use the users for the different services.
+  systemd.services."tahoe.introducer-beta".serviceConfig.User = "tahoe.introducer-beta";
+  systemd.services."tahoe.introducer-beta".serviceConfig.Group = "tahoe.introducer-beta";
+
   networking.firewall.allowedTCPPorts = with config.services.tahoe; [
     # Let traffic through to the introducers
     introducers.alpha.tub.port
