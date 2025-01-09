@@ -1,10 +1,14 @@
 # Define a NixOS module that sets up the Tahoe-LAFS test grid.
 { config, pkgs, ... }:
 let
-  # Use upstream packaging.  The NixOS 21.05 package is broken (though
-  # master should already have a fix for that).  However, maybe we want to
-  # run bleeding edge on this deployment anyway.
-  package = pkgs.callPackage ./tahoe-lafs.nix { };
+  # Choose the tahoe-lafs package to run:
+  #
+  # Some local flavor (see repo history around version 89e5e1f8):
+  #   package = pkgs.callPackage ./tahoe-lafs.nix { };
+  # The package from nixpkgs:
+  #   package = pkgs.tahoe-lafs;
+  # The upstream flake:
+  package = (builtins.getFlake "github:tahoe-lafs/tahoe-lafs/f45175569e870ccd8a25bd9903ea109eaf25075d").packages.x86_64-linux.default;
 in {
   # Configure Tahoe to run here.
   services.tahoe = {
