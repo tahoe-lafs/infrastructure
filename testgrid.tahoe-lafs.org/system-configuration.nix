@@ -5,6 +5,10 @@
 { config, pkgs, ... }:
 
 {
+  # Enable flakes.
+  # https://nixos.wiki/wiki/Nix_command
+  nix.extraOptions = "experimental-features = nix-command flakes";
+
   # Periodically upgrade NixOS to the latest version.  If enabled, a systemd
   # timer will run `nixos-rebuild switch --upgrade` once a day.
   system.autoUpgrade = {
@@ -34,5 +38,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.11"; # Did you read the comment?
-
 }
