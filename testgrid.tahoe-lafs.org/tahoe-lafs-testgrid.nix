@@ -8,7 +8,8 @@ let
   # The package from nixpkgs:
   #   package = pkgs.tahoe-lafs;
   # The upstream flake:
-  package = (builtins.getFlake "github:tahoe-lafs/tahoe-lafs/f45175569e870ccd8a25bd9903ea109eaf25075d").packages.x86_64-linux.default;
+  package = (builtins.getFlake
+    "github:tahoe-lafs/tahoe-lafs/f45175569e870ccd8a25bd9903ea109eaf25075d").packages.x86_64-linux.default;
 in {
   # Configure Tahoe to run here.
   services.tahoe = {
@@ -34,10 +35,10 @@ in {
     # client.  On a more realistic deployment these would all be run
     # separately from other to make their failure modes as independent as
     # possible.
-    nodes =
-    let
+    nodes = let
       # XXX NixOS module doesn't support multi-introducer configuration.
-      introducer = "pb://fodk4doc64febdoxke3a4ddfyanz7ajd@tcp:157.90.125.177:5000/el4fo3rm2h22cnilukmjqzyopdgqxrd2";
+      introducer =
+        "pb://fodk4doc64febdoxke3a4ddfyanz7ajd@tcp:157.90.125.177:5000/el4fo3rm2h22cnilukmjqzyopdgqxrd2";
     in {
       alpha = {
         inherit package;
@@ -80,19 +81,19 @@ in {
   # For each service user, assign it to a distinct group.
   users.users."tahoe.alpha".group = "tahoe.alpha";
   # And also create that group.
-  users.groups."tahoe.alpha" = {};
+  users.groups."tahoe.alpha" = { };
 
   users.users."tahoe.beta".group = "tahoe.beta";
-  users.groups."tahoe.beta" = {};
+  users.groups."tahoe.beta" = { };
 
   users.users."tahoe.gamma".group = "tahoe.gamma";
-  users.groups."tahoe.gamma" = {};
+  users.groups."tahoe.gamma" = { };
 
   users.users."tahoe.introducer-alpha".group = "tahoe.introducer-alpha";
-  users.groups."tahoe.introducer-alpha" = {};
+  users.groups."tahoe.introducer-alpha" = { };
 
   users.users."tahoe.introducer-beta".group = "tahoe.introducer-beta";
-  users.groups."tahoe.introducer-beta" = {};
+  users.groups."tahoe.introducer-beta" = { };
 
   networking.firewall.allowedTCPPorts = with config.services.tahoe; [
     # Let traffic through to the introducers

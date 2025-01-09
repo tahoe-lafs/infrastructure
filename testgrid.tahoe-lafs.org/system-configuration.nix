@@ -22,10 +22,11 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    # Let us check out and update the system configuration repository.
-    git
-  ];
+  environment.systemPackages = with pkgs;
+    [
+      # Let us check out and update the system configuration repository.
+      git
+    ];
 
   # Make sure the firewall is enabled.  This is probably the default but let's
   # be explicit and safe.
