@@ -3,6 +3,9 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
 
+    # This was generated while setting up the machine with nixos-infect.
+    ./networking.nix
+
     # Run a Tahoe-LAFS grid
     ./tahoe-lafs-testgrid.nix
 

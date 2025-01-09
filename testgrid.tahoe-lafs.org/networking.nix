@@ -2,6 +2,10 @@
   # This file was populated at runtime with the networking
   # details gathered from the active system.
   networking = {
+
+    hostName = "testgrid";
+    domain = "tahoe-lafs.org";
+
     nameservers = [ "2a01:4ff:ff00::add:1"
  "2a01:4ff:ff00::add:2"
  "185.12.64.2"

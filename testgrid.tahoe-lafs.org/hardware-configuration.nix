@@ -11,23 +11,11 @@
 # VM and need a new hardware configuration for it - unless it happens to be
 # configured just like this one, which it might be).
 
-{ config, lib, pkgs, modulesPath, ... }:
-
+{ modulesPath, ... }:
 {
-  imports =
-    [ (modulesPath + "/profiles/qemu-guest.nix")
-    ];
-
-  boot.initrd.availableKernelModules = [ "ata_piix" "virtio_pci" "virtio_scsi" "xhci_pci" "sd_mod" "sr_mod" ];
-  boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ ];
-  boot.extraModulePackages = [ ];
-
-  fileSystems."/" =
-    { device = "/dev/disk/by-uuid/32c12782-e288-4ae2-a2bd-796b37087ff4";
-      fsType = "ext4";
-    };
-
-  swapDevices = [ ];
-
+  imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
+  boot.loader.grub.device = "/dev/sda";
+  boot.initrd.availableKernelModules = [ "ata_piix" "uhci_hcd" "xen_blkfront" "vmw_pvscsi" ];
+  boot.initrd.kernelModules = [ "nvme" ];
+  fileSystems."/" = { device = "/dev/sda1"; fsType = "ext4"; };
 }
