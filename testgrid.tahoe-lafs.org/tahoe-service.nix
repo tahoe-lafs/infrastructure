@@ -351,19 +351,7 @@ in
           ];
           serviceConfig = {
             Type = "simple";
-            # Believe it or not, Tahoe is very brittle about the order of
-            # arguments to $(tahoe run). The node directory must come first,
-            # and arguments which alter Twisted's behavior come afterwards.
-            #
-            #   --allow-stdin-close Do not exit when stdin closes ("tahoe run"
-            #   otherwise will exit).
-            #
-            #   --nodaemon makes twistd run in the foreground. Systemd works
-            #   best with child processes that remain in the foreground.
-            #
-            #   --pidfile= prevents twistd from writing a pidfile. A pidfile is
-            #   not necessary when Twisted runs as a foreground process.
-            #
+            # The comments for the introducer ExecStart config above apply here as well.
             ExecStart = ''
               ${settings.package}/bin/tahoe run --allow-stdin-close ${lib.escapeShellArg nodedir} --nodaemon --pidfile=
             '';
