@@ -232,6 +232,7 @@ in
             ExecStart = ''
               ${settings.package}/bin/tahoe run ${lib.escapeShellArg nodedir} --pidfile=${lib.escapeShellArg pidfile}
             '';
+            WorkingDirectory = "${lib.escapeShellArg nodedir}";
             User = "tahoe.introducer-${node}";
             Group = "tahoe.introducer-${node}";
           };
@@ -350,6 +351,7 @@ in
             ExecStart = ''
               ${settings.package}/bin/tahoe run ${lib.escapeShellArg nodedir} --pidfile=${lib.escapeShellArg pidfile}
             '';
+            WorkingDirectory = "${lib.escapeShellArg nodedir}";
             User = "tahoe.${node}";
             Group = "tahoe.${node}";
           };
