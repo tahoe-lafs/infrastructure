@@ -232,6 +232,8 @@ in
             ExecStart = ''
               ${settings.package}/bin/tahoe run ${lib.escapeShellArg nodedir} --pidfile=${lib.escapeShellArg pidfile}
             '';
+            User = "tahoe.introducer-${node}";
+            Group = "tahoe.introducer-${node}";
           };
           preStart = ''
             if [ ! -d ${lib.escapeShellArg nodedir} ]; then
@@ -255,9 +257,14 @@ in
       users.users = lib.flip lib.mapAttrs' cfg.introducers (
         node: _:
         lib.nameValuePair "tahoe.introducer-${node}" {
-          description = "Tahoe node user for introducer ${node}";
           isSystemUser = true;
+          group = "tahoe.introducer-${node}";
+          home = "/var/db/tahoe-lafs/introducer-${node}";
         }
+      );
+      users.groups = lib.flip lib.mapAttrs' cfg.introducers (
+        node: _:
+        lib.nameValuePair "tahoe.introducer-${node}" { }
       );
     })
     (lib.mkIf (cfg.nodes != { }) {
@@ -343,6 +350,8 @@ in
             ExecStart = ''
               ${settings.package}/bin/tahoe run ${lib.escapeShellArg nodedir} --pidfile=${lib.escapeShellArg pidfile}
             '';
+            User = "tahoe.${node}";
+            Group = "tahoe.${node}";
           };
           preStart = ''
             if [ ! -d ${lib.escapeShellArg nodedir} ]; then
@@ -363,9 +372,14 @@ in
       users.users = lib.flip lib.mapAttrs' cfg.nodes (
         node: _:
         lib.nameValuePair "tahoe.${node}" {
-          description = "Tahoe node user for node ${node}";
           isSystemUser = true;
+          group = "tahoe.${node}";
+          home = "/var/db/tahoe-lafs/${node}";
         }
+      );
+      users.groups = lib.flip lib.mapAttrs' cfg.nodes (
+        node: _:
+        lib.nameValuePair "tahoe.${node}" { }
       );
     })
   ];
