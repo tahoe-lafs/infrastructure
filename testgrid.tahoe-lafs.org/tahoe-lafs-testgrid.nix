@@ -38,7 +38,7 @@ in {
     nodes = let
       # XXX NixOS module doesn't support multi-introducer configuration.
       introducer =
-        "pb://fodk4doc64febdoxke3a4ddfyanz7ajd@tcp:157.90.125.177:5000/el4fo3rm2h22cnilukmjqzyopdgqxrd2";
+        "pb://mpp2hs4jt2h4iq2jcq5e7dxlbe5myv7q@tcp:37.27.215.216:5000/xql2niwlnhwf46veso5z53zcjjsmvc5k";
     in {
       alpha = {
         inherit package;
