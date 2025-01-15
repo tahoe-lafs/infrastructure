@@ -213,7 +213,7 @@ in
         let
           # This is a directory, but it has no trailing slash. Tahoe commands
           # get antsy when there's a trailing slash.
-          nodedir = "/var/db/tahoe-lafs/introducer-${node}";
+          nodedir = "/var/lib/tahoe-lafs/introducer-${node}";
         in
         lib.nameValuePair "tahoe.introducer-${node}" {
           description = "Tahoe LAFS node ${node}";
@@ -240,13 +240,12 @@ in
             ExecStart = ''
               ${settings.package}/bin/tahoe run --allow-stdin-close ${lib.escapeShellArg nodedir} --nodaemon --pidfile=
             '';
-            WorkingDirectory = "${lib.escapeShellArg nodedir}";
+            StateDirectory = "tahoe-lafs/introducer-${node}";
             User = "tahoe.introducer-${node}";
             Group = "tahoe.introducer-${node}";
           };
           preStart = ''
-            if [ ! -d ${lib.escapeShellArg nodedir} ]; then
-              mkdir -p /var/db/tahoe-lafs
+            if [ ! -d ${lib.escapeShellArg nodedir}/private ]; then
               # See https://github.com/NixOS/nixpkgs/issues/25273
               tahoe create-introducer \
                 --hostname="${config.networking.hostName}" \
@@ -340,7 +339,7 @@ in
         let
           # This is a directory, but it has no trailing slash. Tahoe commands
           # get antsy when there's a trailing slash.
-          nodedir = "/var/db/tahoe-lafs/${node}";
+          nodedir = "/var/lib/tahoe-lafs/${node}";
         in
         lib.nameValuePair "tahoe.${node}" {
           description = "Tahoe LAFS node ${node}";
@@ -355,13 +354,12 @@ in
             ExecStart = ''
               ${settings.package}/bin/tahoe run --allow-stdin-close ${lib.escapeShellArg nodedir} --nodaemon --pidfile=
             '';
-            WorkingDirectory = "${lib.escapeShellArg nodedir}";
+            StateDirectory = "tahoe-lafs/${node}";
             User = "tahoe.${node}";
             Group = "tahoe.${node}";
           };
           preStart = ''
-            if [ ! -d ${lib.escapeShellArg nodedir} ]; then
-              mkdir -p /var/db/tahoe-lafs
+            if [ ! -d ${lib.escapeShellArg nodedir}/private ]; then
               tahoe create-node --hostname=localhost ${lib.escapeShellArg nodedir}
             fi
 
