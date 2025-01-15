@@ -210,11 +210,6 @@ in
       #   (node: settings: settings.tub.port);
       systemd.services = lib.flip lib.mapAttrs' cfg.introducers (
         node: settings:
-        let
-          # This is a directory, but it has no trailing slash. Tahoe commands
-          # get antsy when there's a trailing slash.
-          nodedir = "/var/lib/tahoe-lafs/introducer-${node}";
-        in
         lib.nameValuePair "tahoe.introducer-${node}" {
           description = "Tahoe LAFS node ${node}";
           wantedBy = [ "multi-user.target" ];
@@ -238,27 +233,27 @@ in
             #   not necessary when Twisted runs as a foreground process.
             #
             ExecStart = ''
-              ${settings.package}/bin/tahoe run --allow-stdin-close ${lib.escapeShellArg nodedir} --nodaemon --pidfile=
+              ${settings.package}/bin/tahoe run --allow-stdin-close $STATE_DIRECTORY --nodaemon --pidfile=
             '';
             StateDirectory = "tahoe-lafs/introducer-${node}";
             User = "tahoe.introducer-${node}";
             Group = "tahoe.introducer-${node}";
           };
           preStart = ''
-            if [ ! -d ${lib.escapeShellArg nodedir}/private ]; then
+            if [ ! -d $STATE_DIRECTORY/private ]; then
               # See https://github.com/NixOS/nixpkgs/issues/25273
               tahoe create-introducer \
                 --hostname="${config.networking.hostName}" \
-                ${lib.escapeShellArg nodedir}
+                $STATE_DIRECTORY
             fi
 
             # Tahoe has created a predefined tahoe.cfg which we must now
             # scribble over.
             # XXX I thought that a symlink would work here, but it doesn't, so
             # we must do this on every prestart. Fixes welcome.
-            # rm ${nodedir}/tahoe.cfg
-            # ln -s /etc/tahoe-lafs/introducer-${node}.cfg ${nodedir}/tahoe.cfg
-            cp /etc/tahoe-lafs/introducer-"${node}".cfg ${lib.escapeShellArg nodedir}/tahoe.cfg
+            # rm $STATE_DIRECTORY/tahoe.cfg
+            # ln -s /etc/tahoe-lafs/introducer-${node}.cfg $STATE_DIRECTORY/tahoe.cfg
+            cp /etc/tahoe-lafs/introducer-"${node}".cfg $STATE_DIRECTORY/tahoe.cfg
           '';
         }
       );
@@ -336,11 +331,6 @@ in
       #   (node: settings: settings.tub.port);
       systemd.services = lib.flip lib.mapAttrs' cfg.nodes (
         node: settings:
-        let
-          # This is a directory, but it has no trailing slash. Tahoe commands
-          # get antsy when there's a trailing slash.
-          nodedir = "/var/lib/tahoe-lafs/${node}";
-        in
         lib.nameValuePair "tahoe.${node}" {
           description = "Tahoe LAFS node ${node}";
           wantedBy = [ "multi-user.target" ];
@@ -352,24 +342,24 @@ in
             Type = "simple";
             # The comments for the introducer ExecStart config above apply here as well.
             ExecStart = ''
-              ${settings.package}/bin/tahoe run --allow-stdin-close ${lib.escapeShellArg nodedir} --nodaemon --pidfile=
+              ${settings.package}/bin/tahoe run --allow-stdin-close $STATE_DIRECTORY --nodaemon --pidfile=
             '';
             StateDirectory = "tahoe-lafs/${node}";
             User = "tahoe.${node}";
             Group = "tahoe.${node}";
           };
           preStart = ''
-            if [ ! -d ${lib.escapeShellArg nodedir}/private ]; then
-              tahoe create-node --hostname=localhost ${lib.escapeShellArg nodedir}
+            if [ ! -d $STATE_DIRECTORY/private ]; then
+              tahoe create-node --hostname=localhost $STATE_DIRECTORY
             fi
 
             # Tahoe has created a predefined tahoe.cfg which we must now
             # scribble over.
             # XXX I thought that a symlink would work here, but it doesn't, so
             # we must do this on every prestart. Fixes welcome.
-            # rm ${nodedir}/tahoe.cfg
-            # ln -s /etc/tahoe-lafs/${lib.escapeShellArg node}.cfg ${nodedir}/tahoe.cfg
-            cp /etc/tahoe-lafs/${lib.escapeShellArg node}.cfg ${lib.escapeShellArg nodedir}/tahoe.cfg
+            # rm $STATE_DIRECTORY/tahoe.cfg
+            # ln -s /etc/tahoe-lafs/${lib.escapeShellArg node}.cfg $STATE_DIRECTORY/tahoe.cfg
+            cp /etc/tahoe-lafs/${lib.escapeShellArg node}.cfg $STATE_DIRECTORY/tahoe.cfg
           '';
         }
       );
