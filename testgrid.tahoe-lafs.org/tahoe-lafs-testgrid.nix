@@ -37,7 +37,7 @@ in {
     # possible.
     nodes = let
       # XXX NixOS module doesn't support multi-introducer configuration.
-      introducer = "pb://fodk4doc64febdoxke3a4ddfyanz7ajd@tcp:testgrid.tahoe-lafs.org:5000/el4fo3rm2h22cnilukmjqzyopdgqxrd2";
+      introducer = "pb://flm2vcjxaxoyah3f2ufdk74augada55i@tcp:testgrid.tahoe-lafs.org:5000/s3kbdgg3j4ohifa633tt7yi25drl6jqa";
     in {
       alpha = {
         inherit package;
