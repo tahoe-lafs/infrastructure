@@ -1,10 +1,15 @@
 # Define a NixOS module that sets up the Tahoe-LAFS test grid.
 { config, pkgs, ... }:
 let
-  # Use upstream packaging.  The NixOS 21.05 package is broken (though
-  # master should already have a fix for that).  However, maybe we want to
-  # run bleeding edge on this deployment anyway.
-  package = pkgs.callPackage ./tahoe-lafs.nix { };
+  # Choose the tahoe-lafs package to run:
+  #
+  # Some local flavor (see repo history around version 89e5e1f8):
+  #   package = pkgs.callPackage ./tahoe-lafs.nix { };
+  # The package from nixpkgs:
+  #   package = pkgs.tahoe-lafs;
+  # The upstream flake:
+  package = (builtins.getFlake
+    "github:tahoe-lafs/tahoe-lafs/f45175569e870ccd8a25bd9903ea109eaf25075d").packages.x86_64-linux.default;
 in {
   # Configure Tahoe to run here.
   services.tahoe = {
@@ -30,10 +35,9 @@ in {
     # client.  On a more realistic deployment these would all be run
     # separately from other to make their failure modes as independent as
     # possible.
-    nodes =
-    let
+    nodes = let
       # XXX NixOS module doesn't support multi-introducer configuration.
-      introducer = "pb://fodk4doc64febdoxke3a4ddfyanz7ajd@tcp:157.90.125.177:5000/el4fo3rm2h22cnilukmjqzyopdgqxrd2";
+      introducer = "pb://flm2vcjxaxoyah3f2ufdk74augada55i@tcp:testgrid.tahoe-lafs.org:5000/s3kbdgg3j4ohifa633tt7yi25drl6jqa";
     in {
       alpha = {
         inherit package;
@@ -69,26 +73,10 @@ in {
     };
   };
 
-  # XXX The NixOS Tahoe service doesn't configure any group for the service
-  # users it creates.  A user cannot be created without a group so without the
-  # following fixes, NixOS throws an error at us at evaluate time.
-
-  # For each service user, assign it to a distinct group.
-  users.users."tahoe.alpha".group = "tahoe.alpha";
-  # And also create that group.
-  users.groups."tahoe.alpha" = {};
-
-  users.users."tahoe.beta".group = "tahoe.beta";
-  users.groups."tahoe.beta" = {};
-
-  users.users."tahoe.gamma".group = "tahoe.gamma";
-  users.groups."tahoe.gamma" = {};
-
-  users.users."tahoe.introducer-alpha".group = "tahoe.introducer-alpha";
-  users.groups."tahoe.introducer-alpha" = {};
-
-  users.users."tahoe.introducer-beta".group = "tahoe.introducer-beta";
-  users.groups."tahoe.introducer-beta" = {};
+  # The current nixpkgs service definition isn't compatible with the upstream
+  # flake, use our own
+  disabledModules = [ "services/network-filesystems/tahoe.nix" ];
+  imports = [ ./tahoe-service.nix ];
 
   networking.firewall.allowedTCPPorts = with config.services.tahoe; [
     # Let traffic through to the introducers
