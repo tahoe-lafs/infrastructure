@@ -46,9 +46,8 @@ For the [Deployment Workflow](#deployment-workflow):
 - Read the doc and the code, consult the existing issues and ask questions (via `#tahoe-lafs` on [Libera](https://libera.chat/))
 - Describe the bug/problem or the missing info/feature in a new issue in this repository
 - Create a new branch (requires **Write** permissions in this repository) and start hacking
-- Submit (draft) pull requests (preferably one per issue) and verify the check status
-- Contact the maintainers when a pull request is ready for review (how?)
-- Wait the merge, verify the expected changes and provide feedback in the issue(s) if needed
+- Submit pull requests (preferably one per issue) and verify the check status
+- Once a pull request as been approved and merged, verify the expected changes and provide feedback in the issue(s) if needed
 
 ## Managed Systems
 
