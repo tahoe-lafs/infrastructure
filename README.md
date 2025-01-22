@@ -14,7 +14,7 @@ to deploy and manage some new systems:
 - a `webforge` server to [MoveOffTrac](https://github.com/tahoe-lafs/MoveOffTrac)
 
 In addition to the [Nix](https://nixos.org/) code allowing to manage the software installed on those servers,
-an [OpenToFu]() plan should handle the definition of the related infrastructure (e.g.: VMs and DNS records).
+an [OpenToFu](https://opentofu.org/) plan should handle the definition of the related infrastructure (e.g.: VMs and DNS records).
 
 ## ToDo/WiP
 
