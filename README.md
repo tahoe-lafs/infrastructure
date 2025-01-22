@@ -8,15 +8,12 @@ This repository was initially created in Sep 2022 as an effort to deploy and
 manage a `testgrid` server using NixOS (now retired).
 
 Since January 2025, some members of the community are seeking to re-use this repository
-to deploy and manage some new systems:
+to deploy and manage some new [systems](#managed-systems).
 
-- a [`testgrid`](#testgrid) server re-using the NixOS configuration written in 2022
-- a [`webforge`](#webforge) server to support the [MoveOffTrac](https://github.com/tahoe-lafs/MoveOffTrac) project
-
-In addition to the [Nix](https://nixos.org/) code allowing to manage the software installed on those servers,
+In addition to the [Nix](https://nixos.org/) code covering the software installed on those servers,
 an [OpenToFu](https://opentofu.org/) plan should handle the definition of the related infrastructure (e.g.: VMs and DNS records).
 
-**WARN**: The content of this repository is currently a work in progress. See the [Roadmap](docs/Roadmap.md) for more information.
+**Warning**: The content of this repository is currently a work in progress. See the [Roadmap](docs/Roadmap.md) for more information.
 
 ## How to Contribute
 
@@ -24,7 +21,7 @@ an [OpenToFu](https://opentofu.org/) plan should handle the definition of the re
 - Describe the bug/problem or the missing info/feature in a new issue in this repository
 - Submit pull requests (preferably one per issue) and verify the check status
 
-  **Caveat**: because they need access to the repository secrets, changes related to OpenToFu will only be triggered on local branches (which means a maintainer will have to be involved - see [roadmap](docs/Roadmap.md)). Changes related to Nix may not suffer the same restriction.
+  **Caveat**: because they need access to the repository secrets, changes related to OpenToFu will only be triggered on local branches (which means a maintainer will have to be involved - see [Roadmap](docs/Roadmap.md)). Changes related to Nix may not suffer the same restriction.
 
 - Once a pull request as been approved and merged, verify the expected changes and provide feedback in the issue(s) if needed
 
@@ -34,20 +31,27 @@ Here is a short description of the systems managed from this repository.
 
 ### Testgrid
 
-Tahoe-LAFS stand-alone grid allowing contributors to test any client software (e.g.: mobile apps).
+Initially deployed re-using the NixOS configuration written in 2022, this server is a Tahoe-LAFS stand-alone grid allowing contributors to test any client software (e.g.: mobile apps).
 
-**WARN**: This server should be re-configured on regular basis,
+**Warning**: This server should be re-configured on regular basis,
 which means the availability of the related services and their data will NOT be guaranteed very long.
 
-Some additional information may be found in this [README](./testgrid.tahoe-lafs.org/README) file
-and in the [TestGrid](https://tahoe-lafs.org/trac/tahoe-lafs/wiki/TestGrid) wiki page.
+More info:
+
+- [README](./testgrid.tahoe-lafs.org/README) file
+- [TestGrid](https://tahoe-lafs.org/trac/tahoe-lafs/wiki/TestGrid) wiki page
 
 ### Webforge
 
-Tahoe-LAFS issue tracking, wiki and web server meant to replace the current Trac server.
+Tahoe-LAFS issue tracking, wiki and web server meant to replace the current [Trac](https://tahoe-lafs.org/trac/tahoe-lafs) server.
 
-**INFO**: This server could be managed only for a limited period of time,
+**Notice**: This server could be managed only for a limited period of time,
 depending if/when the community wants to migrate the content elsewhere (e.g.: Codeberg).
+
+More info:
+
+- [MoveOffTrac](https://github.com/tahoe-lafs/MoveOffTrac) repository
+- [MoveOffTrac](https://tahoe-lafs.org/trac/tahoe-lafs/wiki/MoveOffTrac) wiki page
 
 ## Deployment Workflow
 
