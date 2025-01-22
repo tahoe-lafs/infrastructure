@@ -10,8 +10,8 @@ manage a `testgrid` server using NixOS (now retired).
 Since January 2025, some members of the community are seeking to re-use this repository
 to deploy and manage some new systems:
 
-- a `testgrid` server re-using the NixOS configuration written in 2022
-- a `webforge` server to [MoveOffTrac](https://github.com/tahoe-lafs/MoveOffTrac)
+- a [`testgrid`](#testgrid) server re-using the NixOS configuration written in 2022
+- a [`webforge`](#webforge) server to support the [MoveOffTrac](https://github.com/tahoe-lafs/MoveOffTrac) project
 
 In addition to the [Nix](https://nixos.org/) code allowing to manage the software installed on those servers,
 an [OpenToFu](https://opentofu.org/) plan should handle the definition of the related infrastructure (e.g.: VMs and DNS records).
@@ -43,7 +43,7 @@ For the [Deployment Workflow](#deployment-workflow):
 
 ## How to Contribute
 
-- Read the doc and the code, consult the existing issues and ask questions (via `#tahoe-lafs` on [Libera](https://libera.chat/))
+- Read the doc and the code, consult the existing issues and visit https://tahoe-lafs.org/ to get in touch with the community
 - Describe the bug/problem or the missing info/feature in a new issue in this repository
 - Create a new branch (requires **Write** permissions in this repository) and start hacking
 - Submit pull requests (preferably one per issue) and verify the check status
