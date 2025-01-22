@@ -60,7 +60,8 @@ Tahoe-LAFS stand-alone grid allowing contributors to test any client software (e
 **WARN**: This server should be re-configured on regular basis,
 which means the availability of the related services and their data will NOT be guaranteed very long.
 
-Some additional information may be found in this [README](./testgrid.tahoe-lafs.org/README) file.
+Some additional information may be found in this [README](./testgrid.tahoe-lafs.org/README) file
+and in the [TestGrid](https://tahoe-lafs.org/trac/tahoe-lafs/wiki/TestGrid) wiki page.
 
 ### Webforge
 
