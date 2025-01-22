@@ -16,15 +16,19 @@ to deploy and manage some new systems:
 In addition to the [Nix](https://nixos.org/) code allowing to manage the software installed on those servers,
 an [OpenToFu](https://opentofu.org/) plan should handle the definition of the related infrastructure (e.g.: VMs and DNS records).
 
-## ToDo/WiP
+## Roadmap - WiP
 
-The content of this repository is mostly a work in progress (as time of writing).
+The content of this repository is mostly a work in progress.
+At the time of writing, it does not provide a working solution to manage the systems as described.
 
-Here follows a list of things to do, if not already in progress (see open issues).
+Here follows a list of early steps to reach this goal.
+Some of them should become issues or pull requests.
+
+At the end the whole section might be replaced by long term goals.
 
 For [Testgrid](#testgrid):
 
-- [X] Fix and rework the Nix code to deploy the current Tahoe-LAFS software
+- [X] Fix and rework the Nix code to deploy the current Tahoe-LAFS software (#6)
 - [ ] Implement or adapt the OpenToFu plan to cover the `testgrid` and
   import the resource already deployed (on Hetzner and Gandi if possible)
 - [ ] Refactor the Nix code to integrate the `nixosConfiguration` with the top-level flake,
