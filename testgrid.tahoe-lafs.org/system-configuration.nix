@@ -32,7 +32,7 @@
   # The default is 10% of the partitition size or so.
   services.journald.extraConfig = ''
     # One week of logs ought to be enough
-    MaxRetentionSec=${7 * (24 * 60 * 60)};
+    MaxRetentionSec=${toString(7 * (24 * 60 * 60))}s;
     MaxFileSec=1day
     SystemMaxUse=250M
   '';
