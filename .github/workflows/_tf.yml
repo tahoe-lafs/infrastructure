@@ -1,0 +1,200 @@
+# Re-usable workflow to continuously integrate and deploy OpenToFu plan
+
+on:
+  workflow_call:
+    inputs:
+      tf_version:
+        description: 'Version of OpenToFu runtime to use'
+        required: false
+        type: string
+        default: '1.9.0'
+      tf_dir:
+        description: 'Path to the OpenToFu plan to use'
+        required: false
+        type: string
+        default: './'
+      gh_runner_version:
+        description: 'Version of the GitHub runner to use'
+        required: false
+        type: string
+        default: 'ubuntu-22.04'
+      auto_comment:
+        description: 'Enable automatic comment on GitHub pull request'
+        required: false
+        type: boolean
+        default: true
+      apply_on_branch:
+        description: 'Automaticaly apply plan when on a specific branch'
+        required: false
+        type: string
+        default: ''
+      aws_default_region:
+        description: 'AWS default region'
+        required: false
+        type: string
+        default: 'eu-central-1'
+    secrets:
+      aws_access_key_id:
+        description: 'AWS access key id'
+        required: false
+      aws_secret_access_key:
+        description: 'AWS secret access key'
+        required: false
+      hcloud_token:
+        description: 'API token for Hetzner Cloud'
+        required: false
+
+jobs:
+  tf:
+    name: OpenToFu
+    runs-on: ${{ inputs.gh_runner_version }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.tf_dir }}
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key_id }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_access_key }}
+      AWS_DEFAULT_REGION: ${{ inputs.aws_default_region }}
+      TF_VAR_hcloud_token: ${{ secrets.hcloud_token }}
+    permissions:
+      pull-requests: write
+      contents: read
+
+    steps:
+    - name: Checkout
+      id: checkout
+      uses: actions/checkout@v4
+
+    - name: Setup
+      id: setup
+      uses: opentofu/setup-opentofu@v1
+      with:
+        tofu_version: ${{ inputs.tf_version }}
+
+    - name: Format
+      id: fmt
+      run: tofu fmt -no-color -check -diff
+
+    - name: Init
+      id: init
+      run: tofu init -no-color -input=false
+
+    - name: Validate
+      id: validate
+      run: tofu validate -no-color
+
+    - name: Plan
+      id: plan
+      run: tofu plan -no-color -input=false -compact-warnings -out tf_plan.out
+
+    - name: Post Setup
+      id: post_setup
+      # Only to avoid wrapper to mess up outputs in later steps
+      uses: opentofu/setup-opentofu@v1
+      with:
+        tofu_version: ${{ inputs.tf_version }}
+        tofu_wrapper: false
+
+    - name: Verify
+      id: verify
+      run: |
+        # Process the plan to verify the presence of some data
+        # which can be used later to make additional checks
+        tofu show -no-color tf_plan.out > tf_plan.log 2> >(tee tf_plan.err >&2) && ret=0 || ret=$?
+        # Export the plan in json too
+        tofu show -json tf_plan.out > tf_plan.json
+        # Extract current state from the plan for later comparison
+        unzip tf_plan.out tfstate
+        # Extract data from temp files and export them as outputs for next steps
+        # - changes made, if any
+        echo "changes<<tf_verify_changes" >> $GITHUB_OUTPUT
+        awk '/the following actions/,0' tf_plan.log >> $GITHUB_OUTPUT
+        echo "tf_verify_changes" >> $GITHUB_OUTPUT
+        # - summary of the change, if any
+        echo "summary<<tf_verify_summary" >> $GITHUB_OUTPUT
+        awk '/(Plan: |No changes. )/,1' tf_plan.log | sed -e 's/Plan: /change(s): /' >> $GITHUB_OUTPUT
+        echo "tf_verify_summary" >> $GITHUB_OUTPUT
+        # - stderr describing errors, if any
+        echo "stderr<<tf_verify_stderr" >> $GITHUB_OUTPUT
+        cat tf_plan.err >> $GITHUB_OUTPUT
+        echo "tf_verify_stderr" >> $GITHUB_OUTPUT
+        # Exit with failure if any
+        exit $ret
+
+    - name: Comment
+      id: update
+      if: ${{ always() && github.event_name == 'pull_request' && inputs.auto_comment }}
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ github.token }}
+        script: |
+          // 1. Retrieve existing bot comments for the PR
+          const { data: comments } = await github.rest.issues.listComments({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+          })
+          const botComment = comments.find(comment => {
+            return comment.user.type === 'Bot' && comment.body.includes('pr-auto-comment-${{ inputs.tf_dir }}')
+          })
+
+          // 2. Prepare format of the comment, using toJSON to escape any special char
+          const changes = [
+            ${{ toJSON(steps.verify.outputs.changes) }},
+          ]
+          const errors = [
+            ${{ toJSON(steps.fmt.outputs.stdout) }},
+            ${{ toJSON(steps.init.outputs.stderr) }},
+            ${{ toJSON(steps.validate.outputs.stderr) }},
+            ${{ toJSON(steps.plan.outputs.stderr) }},
+            ${{ toJSON(steps.verify.outputs.stderr) }},
+          ]
+          const output = `
+          <!-- pr-auto-comment-${{ inputs.tf_dir }} -->
+          ### ${{ github.workflow }}
+          | Step | Outcome |
+          | ---- | ------- |
+          | :pencil2: **Format** | \`${{ steps.fmt.outcome }}\` |
+          | :wrench: **Init** ️| \`${{ steps.init.outcome }}\` |
+          | :mag: **Validate** | \`${{ steps.validate.outcome }}\` |
+          | :page_facing_up: **Plan** | \`${{ steps.plan.outcome }}\` |
+          | :passport_control: **Verify** | \`${{ steps.verify.outcome }}\` |
+          | :point_right: **Result** | ${{ ( steps.plan.outcome == 'success' && steps.verify.outcome == 'success' && steps.verify.outputs.summary ) || 'with error(s) - see below' }} |
+
+          <details><summary>show change(s)</summary>
+
+          \`\`\`
+          ${ changes.filter(function(entry) { return /\S/.test(entry); }).join('\n') }
+          \`\`\`
+
+          </details>
+
+          <details><summary>show error(s)</summary>
+
+          \`\`\`
+          ${ errors.filter(function(entry) { return /\S/.test(entry); }).join('\n') }
+          \`\`\`
+
+          </details>
+
+          *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*
+          *Workflow: \`${{ github.workflow_ref }}\`*`;
+
+          // 3. If we have a comment, update it, otherwise create a new one
+          const comment_data = {
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          }
+          if (botComment) {
+            comment_data.comment_id = botComment.id
+            github.rest.issues.updateComment(comment_data)
+          } else {
+            comment_data.issue_number = context.issue.number
+            github.rest.issues.createComment(comment_data)
+          }
+
+    - name: Apply
+      id: apply
+      if: ${{ inputs.apply_on_branch != '' && github.ref == format('refs/heads/{0}', inputs.apply_on_branch) }}
+      run: tofu apply -no-color -input=false -auto-approve tf_plan.out
