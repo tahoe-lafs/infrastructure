@@ -62,18 +62,47 @@ This section describes how the resources defined in this repository should be de
 1. Ensure the relevant ssh public keys are defined in the relevant Hetzner project (e.g.: Tahoe-LAFS)
 2. Create a new Debian VPS referring to at least one ssh key in the same project
 3. Infect the VPS with NixOS (e.g.: using `cloud-init`)
-4. Publish the new A/AAAA/PTR/CNAME DNS records the related zone (e.g.: `tahoe-lafs.org` hosted by Gandi)
+4. Extract the IP's assigned to this new server from the Hetzner cloud console
+5. Publish the new A/AAAA/CNAME DNS records for the related zone (e.g.: `tahoe-lafs.org` hosted by Gandi)
+
+**Notice**:
+
+- Steps 1-3 are automated using an OpenToFu workflow and triggered via a pull request (since #21),
+  but this will only work when initiate from local branch - not from a fork (see #26).
+- Steps 4-5 could be automated as well, but are click-ops tasks to be requested via ticket on Trac
+  (see [#4162](https://tahoe-lafs.org/trac/tahoe-lafs/ticket/4162)).
 
 ### OS and Software
 
 ###  Provisioning
 
-This section describes how to proceed for the first deployment of a NixOS server.
+This section describes how to proceed for the first deployment of a NixOS server,
+assuming it has been correctly deployed as described in the previous section.
 
-The NixOS configuration has to be manually deployed at least once using:
+The following commands assume the working directory to be the checkout of this repository.
+
+1. Save the public ssh key of this new system it in the relevant `known_hosts` files,
+   starting with the one in this repository:
+
+   ```
+   ssh-keyscan -t ed25519 <hostname>.<domainname>,<ipv4>,<ipv6> \
+   >> nix/known_hosts
+   ```
+
+2. Save the public PGP key - based on same ssh one - in this repository:
+
+   ```
+   ssh root@<system_hostname> nix-shell -p ssh-to-pgp --run \"ssh-to-pgp -i /etc/ssh/ssh_host_rsa_key\" \
+   > secrets/.public_keys/srv_<sysname>.asc
+   ```
+
+3. Add the PGP ID from the output of the last command in the `.sops.yaml` file,
+   and follow its instructions to populate secrets for this new system.
+
+The NixOS configuration has to be manually verifed and deployed at least once using:
 
 ```
-nixos-rebuild switch --target-host the-remote-host-to-deploy
+nixos-rebuild dry-activate|switch .#<sysname> --target-host <hostname>.<domainname>
 ```
 
 This first deployment should bootstrap (or fix) the requirements for the automation of the next ones:
@@ -98,17 +127,18 @@ Most failures should be detailed with the relevant error messages also published
 
 Assuming this repository has been configured with:
 
-- a secret ssh (private) key to interact with the OS already [provisioned](#provisioning),
-- some (public) deployment (ssh) keys allowing each [provisioned](#provisioning) servers to checkout the Nix code,
+- a secret SSH (private) key to interact with the OS already [provisioned](#provisioning),
+- some (public) deployment (SSH) keys allowing each [provisioned](#provisioning) servers to checkout the Nix code,
 
 a pull request would automatically run `nix flake check` which should trigger the `nix build` of
 all the `nixosConfiguration` and their dependencies (could take a while).
 
 And here is how the automated deployment should work once a pull request is merged:
 
-1. the GHA runner initiate an remote shell via ssh using the private ssh key,
-2. the authenticated user triggers an hardened deployment script (the only command available to him),
-3. this script checks out the Nix code from the repository at the targeted revision and
-4. call the `nixos-rebuild` to **`switch`** to the `nixosConfiguration` on the local host.
+1. the build runner uses the secret SSH key to established a remote shell on each system,
+2. these SSH sessions can only start a hardened `update-deployment` script,
+3. which checks out the flake from git at the targeted revision,
+4. runs the `nixos-rebuild dry-activate` commands to verify the `nixosConfiguration`,
+5. and then runs `nixos-rebuild switch` to deploy it localy on the system.
 
-The output of the deployment script should be visible in the GHA logs.
+The output of the whole automation described above should be visible in the GHA logs.

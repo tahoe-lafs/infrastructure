@@ -17,11 +17,12 @@ For [Testgrid](../README.md#testgrid):
 
 For [Webforge](../README.md#webforge):
 
-- [ ] Implement the OpenToFu plan for Hetzner and its CI/CD workflow with GHA
-- [ ] Implement the NixOS configuration and its CI/CD workflow with GHA
+- [X] Implement the OpenToFu plan for Hetzner and its CI/CD workflow with GHA
+- [X] Implement the NixOS configuration and its CI/CD workflow with GHA
 
 For the [Deployment Workflow](../README.md#deployment-workflow):
 
 - [ ] Automated the DNS configuration using OpenToFu and the relevant credentials from Gandi
+  (see [#4162](https://tahoe-lafs.org/trac/tahoe-lafs/ticket/4162))
 - [ ] Describe the [provisioning](../README.md#provisioning) steps with the relevant paths and snippets
 - [ ] Investigate how to allow pull request from (external) fork (with read-only token?)
