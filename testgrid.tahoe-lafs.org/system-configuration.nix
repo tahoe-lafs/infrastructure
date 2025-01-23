@@ -20,6 +20,10 @@
     allowReboot = true;
   };
 
+  # NixOS likes to fill up boot partitions with (by default) 100 old kernels.
+  # Keep a (for us) more reasonable number around.
+  boot.loader.grub.configurationLimit = 3;
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs;
