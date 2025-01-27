@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+# Configure bash behavior
+set -o xtrace   # print every call to help debugging
+set -o errexit  # exit on failed command
+set -o nounset  # exit on undeclared variables
+set -o pipefail # exit on any failed command in pipes
+
+# Read the arguments
+target=${1?"Unknown target"}
+reference=${2-main}
+
+# Read the revision from stdin
+read -s -r -N 40 -t 1 rev || { echo "Could not read the 40 bytes long revision from stdin!"; exit 1; }
+# Sanity check the revision
+if ! [[ ${rev} =~ [0-9a-f]{40} ]]; then
+  echo "Could not parse the 40 bytes long revision from stdin!"
+  exit 1
+fi
+
+# Set some constants for our deployment
+url_user='git'
+url_host='github.com'
+url_owner='tahoe-lafs'
+url_repo='infrastructure'
+url="git+ssh://${url_user}@${url_host}/${url_owner}/${url_repo}"
+url_host_key='ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl'
+nix_opts=( '--extra-experimental-features' 'nix-command flakes' )
+
+# Overwrite (for now) the known_hosts with the git server key
+test -d ~/.ssh || mkdir ~/.ssh
+echo "${url_host} ${url_host_key}" > ~/.ssh/known_hosts
+
+# Load the existing private key used by sshd
+# TODO: considering generating a new key for that purpose only or one for all provisioned once?
+export GIT_SSH_COMMAND="ssh -i /etc/ssh/ssh_host_ed25519_key"
+# Print the public key, in case it has not been yet authorized
+echo "Public key used to access ${url_host}:"
+cat /etc/ssh/ssh_host_ed25519_key.pub
+
+# Verify the authentication a few times to give a chance to authorize read access for a new key
+(r=3;while ! (${GIT_SSH_COMMAND} -T "${url_user}@${url_host}" || [ $? -eq 1 ]); do ((--r))||exit;sleep 10;done)
+
+# Use the key to pull the flake and show some info
+nix "${nix_opts[@]}" flake metadata "${url}?ref=${reference}&rev=${rev}"
+
+# Then dry-activate and switch the related nixos configuration
+nixos-rebuild dry-activate --flake "${url}?ref=${reference}&rev=${rev}#${target}"
+nixos-rebuild switch --flake "${url}?ref=${reference}&rev=${rev}#${target}"
