@@ -12,7 +12,8 @@
   nix.gc = {
     automatic = lib.mkDefault true;
     dates = lib.mkDefault "weekly";
-    options = lib.mkDefault "--delete-older-than 30d";
+    randomizedDelaySec = "45min";
+    options = lib.mkDefault "--delete-older-than 14d";
   };
 
   boot.tmp.cleanOnBoot = true;
