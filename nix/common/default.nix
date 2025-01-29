@@ -1,6 +1,9 @@
 # This should be applied on all hosts
-{ config, lib, pkgs, modules, sources, ... }: {
+{ config, lib, pkgs, modules, sources, nixpkgs, ... }: {
   imports = [
+    # Set options intended for a "small" NixOS: Do not build X and docs.
+    (nixpkgs + "/nixos/modules/profiles/minimal.nix")
+
     ./users.nix
     ./sops.nix
   ];
