@@ -125,10 +125,10 @@
     "sops-nix": {
       "inputs": {
         "nixpkgs": [
-          "nixpkgs"
+          "nixpkgs-unstable"
         ],
         "nixpkgs-stable": [
-          "nixpkgs-oldstable"
+          "nixpkgs"
         ]
       },
       "locked": {
