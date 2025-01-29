@@ -1,8 +1,7 @@
 # This should be applied on all hosts
-{ config, lib, pkgs, ... }: {
+{ config, pkgs, ... }: {
   # always use only the configured users
   users.mutableUsers = false;
-  users.groups.staff = {};
   users.users = {
     root = {
       openssh.authorizedKeys.keys = [
