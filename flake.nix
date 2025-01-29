@@ -1,9 +1,9 @@
 {
   inputs = {
     # The nixpkgs channels we want to consume
-    nixpkgs-24_05.url = "github:NixOS/nixpkgs/nixos-24.05";
-    nixpkgs-24_11.url = "github:NixOS/nixpkgs/nixos-24.11";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-24_05.url = "github:NixOS/nixpkgs/nixos-24.05-small";
+    nixpkgs-24_11.url = "github:NixOS/nixpkgs/nixos-24.11-small";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable-small";
 
     # Some links to the above channels for consistent naming in outputs
     nixpkgs-oldstable.follows = "nixpkgs-24_05";
