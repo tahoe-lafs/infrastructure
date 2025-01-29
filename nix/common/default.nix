@@ -35,6 +35,10 @@
     settings.PasswordAuthentication = false;
   };
 
+  # NixOS likes to fill up boot partitions with (by default) 100 old kernels.
+  # Keep a (for us) more reasonable number around.
+  boot.loader.grub.configurationLimit = 3;
+
   environment.systemPackages = with pkgs; [
     # FIXME: ssh-to-gpg is broken since 1.1.3 in NixOS 24.11
     # https://github.com/Mic92/ssh-to-pgp/issues/73
