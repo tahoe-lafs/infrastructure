@@ -13,7 +13,7 @@ resource "hcloud_server" "webforge" {
     "env" : "prod"
     "source" : "tf-tahoe-lafs-core"
   }
-  ssh_keys  = [for k in hcloud_ssh_key.ssh_keys: k.name]
+  ssh_keys  = [for k in hcloud_ssh_key.ssh_keys : k.name]
   user_data = <<EOF
 #cloud-config
 
