@@ -20,6 +20,10 @@
     allowReboot = true;
   };
 
+  # NixOS likes to fill up boot partitions with (by default) 100 old kernels.
+  # Keep a (for us) more reasonable number around.
+  boot.loader.grub.configurationLimit = 3;
+
   # From https://nixos.wiki/wiki/Storage_optimization
   nix.gc = {
     automatic = true;
