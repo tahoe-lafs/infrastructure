@@ -40,6 +40,15 @@
       git
     ];
 
+  # Keep log file disk usage in check.
+  # The default is 10% of the partitition size or so.
+  services.journald.extraConfig = ''
+    # One week of logs ought to be enough
+    MaxRetentionSec=${toString(7 * (24 * 60 * 60))}s
+    MaxFileSec=1day
+    SystemMaxUse=250M
+  '';
+
   # Make sure the firewall is enabled.  This is probably the default but let's
   # be explicit and safe.
   networking.firewall.enable = true;
