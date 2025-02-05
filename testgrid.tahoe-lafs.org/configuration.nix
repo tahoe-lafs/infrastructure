@@ -1,5 +1,8 @@
 { ... }: {
   imports = [
+    # Set options intended for a "small" NixOS: Do not build X and docs.
+    <nixpkgs/nixos/modules/profiles/minimal.nix>
+
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
 
