@@ -38,24 +38,7 @@ jobs:
       - name: Set matrix
         id: set-matrix
         run: |
-          # Extract targets from the flake
-          IFS=","
-          target_arr=( $(nix eval --json --apply 'builtins.attrNames' .#nixosConfigurations | sed -r -e 's/\[([^\[]+)\]/\1/' -e 's/"//g') )
-          index=0
-          size=${#target_arr[@]}
-          output="matrix={\"include\":["
-          IFS=" "
-          for target in ${target_arr[@]}; do
-            output+="{\"target\":\"${target}\","
-            output+="\"hostname\":$(nix eval .#nixosConfigurations.${target}.config.networking.hostName),"
-            output+="\"domain\":$(nix eval .#nixosConfigurations.${target}.config.networking.domain)}"
-            if [[ $((index++)) -lt $((size -1)) ]]; then
-              output+=","
-            fi
-          done
-          output+="]}"
-          echo $output
-          echo $output >> $GITHUB_OUTPUT
+          echo 'matrix={"include":[{"target":"webforge","hostname":"webforge","domain":""}]}' >> $GITHUB_OUTPUT
 
   build:
     name: Build
