@@ -38,7 +38,11 @@ jobs:
       - name: Set matrix
         id: set-matrix
         run: |
-          echo 'matrix={"include":[{"target":"webforge","hostname":"webforge","domain":""}]}' >> $GITHUB_OUTPUT
+          # Create a "matrix" targeting the systems we want to check (and later deploy),
+          # which will be consumed by the next job to start one build per system.
+          echo 'matrix={"include":[\
+          {"target":"webforge","hostname":"webforge","domain":"tahoe-lafs.org"}\
+          ]}' >> $GITHUB_OUTPUT
 
   build:
     name: Build
@@ -47,6 +51,7 @@ jobs:
     needs: check
     strategy:
       fail-fast: false
+      # Consuming the matrix created above
       matrix: ${{fromJson(needs.check.outputs.matrix)}}
     steps:
       - name: Checkout
