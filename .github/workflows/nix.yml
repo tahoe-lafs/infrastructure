@@ -40,9 +40,8 @@ jobs:
         run: |
           # Create a "matrix" targeting the systems we want to check (and later deploy),
           # which will be consumed by the next job to start one build per system.
-          echo 'matrix={"include":[\
-          {"target":"webforge","hostname":"webforge","domain":"tahoe-lafs.org"}\
-          ]}' >> $GITHUB_OUTPUT
+          echo 'matrix={"include":[{"target":"webforge","hostname":"webforge","domain":"tahoe-lafs.org"}]}' \
+          >> $GITHUB_OUTPUT
 
   build:
     name: Build
