@@ -9,7 +9,7 @@ let
   #   package = pkgs.tahoe-lafs;
   # The upstream flake:
   package = (builtins.getFlake
-    "github:tahoe-lafs/tahoe-lafs/f45175569e870ccd8a25bd9903ea109eaf25075d").packages.x86_64-linux.default;
+    "github:tahoe-lafs/tahoe-lafs?ref=master").packages.x86_64-linux.default;
 in {
   # Configure Tahoe to run here.
   services.tahoe = {
