@@ -40,11 +40,9 @@
       git
     ];
 
-  # Keep log file disk usage in check.
-  # The default is 10% of the partitition size or so.
+  # We aren't interested in old logs.
   services.journald.extraConfig = ''
-    # One week of logs ought to be enough
-    MaxRetentionSec=${toString(7 * (24 * 60 * 60))}s
+    MaxRetentionSec=1week
     MaxFileSec=1day
     SystemMaxUse=250M
   '';
