@@ -37,7 +37,7 @@
   environment.systemPackages = with pkgs;
     [
       # Let us check out and update the system configuration repository.
-      git
+      gitMinimal
     ];
 
   # We aren't interested in old logs.
