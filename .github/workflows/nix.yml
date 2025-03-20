@@ -27,7 +27,7 @@ jobs:
 
       - name: Install Nix
         id: install_nix
-        uses: nixbuild/nix-quick-install-action@v28
+        uses: nixbuild/nix-quick-install-action@v30
 
       - name: Check Nix Flake
         id: check
@@ -66,10 +66,10 @@ jobs:
 
       - name: Install Nix
         id: install_nix
-        uses: nixbuild/nix-quick-install-action@v28
+        uses: nixbuild/nix-quick-install-action@v30
 
       - name: Restore and cache Nix store ${{ matrix.target }}
-        uses: nix-community/cache-nix-action@v5
+        uses: nix-community/cache-nix-action@v6
         with:
           # restore and save a cache using this key
           primary-key: ${{ runner.os }}-Nix-${{ matrix.target }}-${{ hashFiles('flake.*', 'nix/common/*.nix', 'nix/modules/**.nix', format('nix/hosts/{0}/*.nix', matrix.target)) }}
