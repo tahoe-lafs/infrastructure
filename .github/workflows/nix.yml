@@ -120,4 +120,4 @@ jobs:
           target_rev=$(git log -n 1 --format='format:%H')
           echo "Target revision: ${target_rev}"
           echo -n "${target_rev}" | \
-          ssh -T -o "UserKnownHostsFile=nix/known_hosts" "bot-cd@${{ matrix.hostname }}.${{ matrix.domain }}"
+          ssh -T -F "nix/ssh_config" -o "UserKnownHostsFile=nix/known_hosts" "bot-cd@${{ matrix.hostname }}.${{ matrix.domain }}"
