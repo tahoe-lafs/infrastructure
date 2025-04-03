@@ -8,11 +8,13 @@ on:
       - '.github/workflows/nix.yml'
       - 'nix/**'
       - 'flake.*'
+      - 'secrets/**'
   pull_request:
     paths:
       - '.github/workflows/nix.yml'
       - 'nix/**'
       - 'flake.*'
+      - 'secrets/**'
 
 jobs:
   check:
@@ -91,3 +93,31 @@ jobs:
         id: check_target
         run: |
           nix build .#nixosConfigurations.${{ matrix.target }}.config.system.build.toplevel
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-24.04
+    if: github.ref == 'refs/heads/main'
+    needs: check
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJson(needs.check.outputs.matrix)}}
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Load ssh key in agent
+        id: ssh_agent
+        uses: LeastAuthority/ssh-agent-action@v1
+        with:
+          private_key: ${{ secrets.DEPLOYMENT_SSH_KEY }}
+
+      - name: Deploy nixosConfiguration on ${{ matrix.target }}
+        id: deploy_target
+        run: |
+          # Specifying the target revision we want to deploy
+          target_rev=$(git log -n 1 --format='format:%H')
+          echo "Target revision: ${target_rev}"
+          echo -n "${target_rev}" | \
+          ssh -T -F "nix/ssh_config" -o "UserKnownHostsFile=nix/known_hosts" "bot-cd@${{ matrix.hostname }}.${{ matrix.domain }}"
