@@ -1,0 +1,37 @@
+# This files uses YAML anchors which allows reuse of multiple keys 
+# without having to repeat yourself.
+# Also see https://github.com/Mic92/dotfiles/blob/master/nixos/.sops.yaml
+# for a more complex example.
+keys:
+  # The following public keys can be found in secrets/.public-keys
+  # They have to be imported and trusted
+  # E.g.: `gpg --import ...` and `gpg --edit-key ...`
+  # First the GPG fingerprints of the admin (hardware token recommanded)
+  - &adm_btlogy 411eb16d13b422490feba1155a7a09f0c279fcd6
+  - &adm_hacklschorsch 5244970fbec8aa66658ec4b6d7d4a441431a73f1
+  # Then the GPG fingerprints derivated of the sshd RSA key of the servers
+  # which can be obtain by running the following command on the server
+  # nix-shell -p ssh-to-pgp --run "ssh-to-pgp -i /etc/ssh/ssh_host_rsa_key"
+  - &srv_webforge 122ace3a40ab7fc47e5659c29c159e5083d0ed64
+creation_rules:
+  # The following files can be created with:
+  # `nix-shell -p sops --run "sops <file>"`
+  # To update after changing the keys:
+  # `nix-shell -p sops --run "sops updatekeys <file>"`
+  - path_regex: secrets/common\.(yaml|json|env|ini)$
+    key_groups:
+    - pgp:
+      - *adm_btlogy
+      - *adm_hacklschorsch
+      - *srv_webforge
+  - path_regex: secrets/webforge\.(yaml|json|env|ini)$
+    key_groups:
+    - pgp:
+      - *adm_btlogy
+      - *adm_hacklschorsch
+      - *srv_webforge
+  - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+    - pgp:
+      - *adm_btlogy
+      - *adm_hacklschorsch
