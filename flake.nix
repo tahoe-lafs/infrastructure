@@ -13,14 +13,7 @@
     sops-nix = {
       url = "github:Mic92/sops-nix";
       # Flip those when the last systems can start using this module
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-      inputs.nixpkgs-stable.follows = "nixpkgs";
-    };
-    simple-nixos-mailserver = {
-      url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-24.05";
-      # Flip those when the last systems can start using this module
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.nixpkgs-24_05.follows = "nixpkgs-oldstable";
     };
   };
   outputs = { self, nixpkgs, nixpkgs-oldstable, nixpkgs-unstable, ... }@attrs:
