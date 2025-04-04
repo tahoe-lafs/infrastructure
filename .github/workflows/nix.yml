@@ -111,7 +111,7 @@ jobs:
         id: ssh_agent
         uses: LeastAuthority/ssh-agent-action@v1
         with:
-          private_key: ${{ secrets.DEPLOYMENT_SSH_KEY }}
+          private_key: ${{ secrets.BOT_CD_SSH_KEY }}
 
       - name: Deploy nixosConfiguration on ${{ matrix.target }}
         id: deploy_target
