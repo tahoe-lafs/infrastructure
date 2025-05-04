@@ -33,6 +33,26 @@ resource "hetznerdns_record" "tl-org_www" {
   zone_id = hetznerdns_zone.tl-org.id
 }
 
+# Mailing lists
+resource "hetznerdns_record" "tl-org_lists" {
+  for_each = {
+    # <type>-<index> = <value>
+    mx-1   = "5 smtp1.osuosl.org.",
+    mx-2   = "5 smtp2.osuosl.org.",
+    mx-3   = "5 smtp3.osuosl.org.",
+    mx-4   = "5 smtp4.osuosl.org.",
+    txt-1  = "v=spf1 mx include:_spf.osuosl.org ~all",
+    a-1    = "140.211.9.53"
+    aaaa-1 = "2605:bc80:3010:104::8cd3:935"
+  }
+
+  name    = "lists"
+  type    = upper(split("-", each.key)[0])
+  value   = each.value
+  ttl     = hetznerdns_zone.tl-org.ttl
+  zone_id = hetznerdns_zone.tl-org.id
+}
+
 # Testgrid - trac#4160
 resource "hetznerdns_record" "tl-org_testgrid_ipv4" {
   name    = "testgrid"
