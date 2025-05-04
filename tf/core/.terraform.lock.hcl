@@ -1,6 +1,29 @@
 # This file is maintained automatically by "tofu init".
 # Manual edits may be lost in future updates.
 
+provider "registry.opentofu.org/germanbrew/hetznerdns" {
+  version     = "3.4.2"
+  constraints = "3.4.2"
+  hashes = [
+    "h1:J4iAT/Zec4gTfhepFK79q1CL7vHE4RMovNwZyDnNcuw=",
+    "zh:08edefa88095753989eabd67bb97b956779196f6a2386b54fcfcf4b40acf4ef8",
+    "zh:3e21a433606ff9a8a6b476bf2f35b369e53390d07ef0d8a1e2b5c4f5a4cec964",
+    "zh:5974c92811f847819094fc2b0fb75e63fe9c403f1475732c9e882c29a325c917",
+    "zh:7173f383760c37f2d1a39f2e5cb20123257c3182b723a29af471e6f0f927520d",
+    "zh:8b9630ade6a8c26ca52438faf0b57dd90b5cdd32101085b17a118410f0d76506",
+    "zh:9f1edcc0dbbb715ed86fbb581b3b3a4abb5b3eeb419dc3828dfcd778392abc97",
+    "zh:b9fcc31c58d18ec5ca8c0c0f14cff4765787c63708e958ff545d1c81356d7684",
+    "zh:bda74d980a669900755f14b2299f541e9b4d850bab06674966fd0165e503fa79",
+    "zh:d6ed03a2d723d3c60a3e47dfbb0a25bb5215b5b4adcb79ea55157f7116b36c18",
+    "zh:d976092ab328c4009b25c41ecf088737d1a05d2ecc9956151e02c61a2675997f",
+    "zh:df697f0188281ae62d054b4b1ccd349fa3380a08028ef654137386d1a0dea311",
+    "zh:dfb707c004ae56adcbbd3f9bbfe17bcaedd9fed6cb80f98b2f3c6446bdb4da5d",
+    "zh:e3b6de6a7905f6de7e72430c0a59c566937619b556116d216055eb5c6bd6c6b3",
+    "zh:e831df55d0ae548f386e393a9ede37464cdc79bf9a0748959c483222d000f5e9",
+    "zh:f039e4a2319fdc43961f204e60fecafd031d6327a88f581c0a6c7a474724af9f",
+  ]
+}
+
 provider "registry.opentofu.org/hetznercloud/hcloud" {
   version     = "1.49.1"
   constraints = "1.49.1"
