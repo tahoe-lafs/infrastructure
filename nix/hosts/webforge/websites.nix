@@ -1,4 +1,4 @@
-{ ... }: {
+{ pkgs, ... }: {
 
   # User to deploy the pages generated elsewhere
   users.users = {
@@ -8,6 +8,9 @@
       group = "nginx";
       openssh.authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL0d6K/8HZjOQEUViQ363sYJFHdTCp22SW5DPyykSHtb bot-www@tahoe-lafs.org"
+      ];
+      packages = [
+        pkgs.rsync
       ];
     };
   };
