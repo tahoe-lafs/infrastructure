@@ -46,28 +46,11 @@
           if ($http_host != 87b59b92.nip.io) {
             rewrite ^(.*)$ https://87b59b92.nip.io$1 redirect;
           }
-          # Redirect the legacy wiki pages to the migrated ones
-          rewrite trac/tahoe-lafs/wiki/WikiStart$ https://forge.87b59b92.nip.io/tahoe-lafs/trac/wiki/Home redirect;
-          rewrite trac/tahoe-lafs/wiki/ViewTickets$ https://forge.87b59b92.nip.io/tahoe-lafs/trac/issues redirect;
-          rewrite trac/tahoe-lafs/wiki(|/.*)\?action=history$ https://forge.87b59b92.nip.io/tahoe-lafs/trac/wiki$1?action=_revision redirect;
-          rewrite trac/tahoe-lafs/wiki(|/.*)$ https://forge.87b59b92.nip.io/tahoe-lafs/trac/wiki$1 redirect;
-          # Redirect the legacy tickets to the new migrated issues
-          rewrite trac/tahoe-lafs/ticket(|.*)$ https://forge.87b59b92.nip.io/tahoe-lafs/trac/issues$1 redirect;
-          rewrite trac/tahoe-lafs/newticket$ https://forge.87b59b92.nip.io/tahoe-lafs/trac/issues/new redirect;
-          # Redirect the legacy timeline and roadmap pages from Trac to their migrated equivalents on Forgejo
-          rewrite trac/tahoe-lafs/timeline$ https://forge.87b59b92.nip.io/tahoe-lafs/trac/activity;
-          rewrite trac/tahoe-lafs/roadmap$ https://forge.87b59b92.nip.io/tahoe-lafs/trac/milestones;
-          # Redirect the legacy browser pages from Trac to the clone from GitHub on Forgio
-          rewrite trac/tahoe-lafs/browser/git(|/.*)$ https://forge.87b59b92.nip.io/tahoe-lafs/tahoe-lafs/src/branch/master$1 redirect;
-          rewrite trac/tahoe-lafs/browser/trunk(|/.*)$ https://forge.87b59b92.nip.io/tahoe-lafs/tahoe-lafs/src/branch/master$1 redirect;
-          rewrite trac/tahoe-lafs/browser/?$ https://forge.87b59b92.nip.io/tahoe-lafs/tahoe-lafs redirect;
-          # Redirect any other legacy pages from Trac to the main page of the trac project on Forgejo
-          rewrite trac/tahoe-lafs(|/[^/]*)$ https://forge.87b59b92.nip.io/tahoe-lafs/trac redirect;
           # Redirect unmigrated pages to the legacy site:
-          # - other trac projects - mostly stalled
+          # - all trac projects - tahoe-lafs is pending for Forgejo, others are mostly stalled
           # - downloads - still used to publish new releases
           # - pipermail - still serving some mailing archive (not older than 02-Dec-2021) before lists.tahoe-lafs.org
-          # - hacktahoelafs - to be migrated as a blog post
+          # - hacktahoelafs - to be migrated as a simple blog post or a special page
           # - user home dirs (e.g. ~trac, ~warner and ~zooko) - still holds files referred from some other places
           rewrite (trac|downloads|pipermail|hacktahoelafs|~[^/]+)(|/.*)$ https://legacy.87b59b92.nip.io/$1$2 redirect;
         '';
