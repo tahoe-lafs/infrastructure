@@ -3,6 +3,10 @@
     ../../common
     ./hardware-configuration.nix
     ./networking.nix
+
+    ./forgejo.nix
+    ./mailserver.nix
+    ./postgresql.nix
   ];
 
   networking.hostName = "webforge";

@@ -15,6 +15,12 @@
       # Flip those when the last systems can start using this module
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    simple-nixos-mailserver = {
+      url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-24.11";
+      # Flip those when the last systems can start using this module
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs-24_11.follows = "nixpkgs";
+    };
   };
   outputs = { self, nixpkgs, nixpkgs-oldstable, nixpkgs-unstable, ... }@attrs:
     let
