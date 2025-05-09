@@ -18,6 +18,8 @@
   # Ensure there is a directory to deploy the pages
   systemd.tmpfiles.rules = [
     "d /var/www 0775 nginx nginx"
+    "d /var/www/live 0775 bot-www nginx"
+    "d /var/www/preview 0775 bot-www nginx"
   ];
 
   services.nginx = {
