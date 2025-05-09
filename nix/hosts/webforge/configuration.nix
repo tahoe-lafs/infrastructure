@@ -3,6 +3,8 @@
     ../../common
     ./hardware-configuration.nix
     ./networking.nix
+
+    ./web-landing-page.nix
   ];
 
   networking.hostName = "webforge";
