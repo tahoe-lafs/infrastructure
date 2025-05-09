@@ -4,6 +4,7 @@
     ./hardware-configuration.nix
     ./networking.nix
 
+    ./forgejo-runner.nix
     ./forgejo.nix
     ./postgresql.nix
   ];
