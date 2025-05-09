@@ -26,6 +26,12 @@
     # The service and the firewall should already be configured elsewhere - see configuration.nix
     # But we need to enable it here (again) to evaluate the `nginx` group in the lines above.
     enable = true;
+    # Configure a cache to speedup the replies proxied from the legacy site
+    proxyCachePath.legacy = {
+      enable = true;
+      keysZoneName = "legacy";
+      maxSize = "128m";
+    };
 
     # Configure the virtualhosts to serve the pages
     # TODO: Replace 87b59b92.nip.io by tahoe-lafs.org below when ready - trac#4162
@@ -69,8 +75,12 @@
         forceSSL = true;
         locations = {
           # Proxy all requests to legacy linode server
+          # and cache some replies
           "/" = {
             proxyPass = "https://74.207.252.227/";
+            extraConfig = ''
+              proxy_cache legacy;
+            '';
           };
           # Only because the original file do not exist uncompressed!
           # And the proxy fails to get the compressed one, unlike a browser?
@@ -79,6 +89,7 @@
           "/~trac/LAFS.svg" = {
             proxyPass = "https://74.207.252.227/~trac/LAFS.svg.gz";
             extraConfig = ''
+              proxy_cache       legacy;
               proxy_hide_header Content-Type;
               add_header        Content-Encoding gzip;
               add_header        Content-Type image/svg+xml;
