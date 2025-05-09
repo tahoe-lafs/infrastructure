@@ -4,6 +4,9 @@
     ./hardware-configuration.nix
     ./networking.nix
 
+    ./forgejo.nix
+    ./mailserver.nix
+    ./postgresql.nix
     ./websites.nix
   ];
 
