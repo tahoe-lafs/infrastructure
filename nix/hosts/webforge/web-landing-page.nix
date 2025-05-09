@@ -26,6 +26,12 @@
     # The service and the firewall should already be configured elsewhere - see configuration.nix
     # But we need to enable it here (again) to evaluate the `nginx` group in the lines above.
     enable = true;
+    # Configure a cache to speedup the replies proxied from the legacy site
+    proxyCachePath.legacy = {
+      enable = true;
+      keysZoneName = "legacy";
+      maxSize = "128m";
+    };
 
     # Configure the virtualhosts to serve the pages
     # TODO: Replace 87b59b92.nip.io by tahoe-lafs.org below when ready - trac#4162
@@ -69,8 +75,12 @@
         forceSSL = true;
         locations = {
           # Proxy all requests to legacy linode server
+          # and cache replies to save some time and BW
           "/" = {
             proxyPass = "https://74.207.252.227/";
+            extraConfig = ''
+              proxy_cache legacy;
+            '';
           };
         };
       };
