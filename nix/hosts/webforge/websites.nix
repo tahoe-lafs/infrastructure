@@ -71,6 +71,14 @@
         enableACME = true;
         forceSSL = true;
         locations = {
+          # Proxy all requests to legacy linode server
+          # and cache some replies
+          "/" = {
+            proxyPass = "https://74.207.252.227/";
+            extraConfig = ''
+              proxy_cache legacy;
+            '';
+          };
           # Only because the original file do not exist uncompressed!
           # And the proxy fails to get the compressed one, unlike a browser?
           # FIXME: (re-)create the missing ~trac/LAFS.svg on the legacy server
@@ -82,19 +90,6 @@
               proxy_hide_header Content-Type;
               add_header        Content-Encoding gzip;
               add_header        Content-Type image/svg+xml;
-            '';
-          };
-          # Everything else is proxied but only for GET and HEAD requests
-          # This should reduce chances of modification after the migration
-          "/" = {
-            proxyPass = "https://74.207.252.227/";
-            extraConfig = ''
-              proxy_cache legacy;
-              limit_except GET {
-                  deny all;
-              }
-              # Redirect the legacy links from trac to the landing page for 2nd redirection
-              rewrite trac/tahoe-lafs(|/.*)$ https://87b59b92.nip.io/trac/tahoe-lafs$1 redirect;
             '';
           };
         };
