@@ -11,7 +11,7 @@
   # Enable firewall with the required ports
   networking.firewall = {
     enable = true;
-    allowPing = false;
+    allowPing = true;
     allowedTCPPorts = [
       80
       443
@@ -19,6 +19,7 @@
     allowedUDPPorts = [
       443
     ];
+    rejectPackets = true;
   };
 
   # Enable Nginx with common settings
