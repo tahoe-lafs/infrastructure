@@ -72,18 +72,6 @@
           "/" = {
             proxyPass = "https://74.207.252.227/";
           };
-          # Only because the original file do not exist uncompressed!
-          # And the proxy fails to get the compressed one, unlike a browser?
-          # FIXME: (re-)create the missing ~trac/LAFS.svg on the legacy server
-          # Or fix the proxy (headers?) to access the compressed file?
-          "/~trac/LAFS.svg" = {
-            proxyPass = "https://74.207.252.227/~trac/LAFS.svg.gz";
-            extraConfig = ''
-              proxy_hide_header Content-Type;
-              add_header        Content-Encoding gzip;
-              add_header        Content-Type image/svg+xml;
-            '';
-          };
         };
       };
     };
