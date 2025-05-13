@@ -43,10 +43,13 @@
       };
       mailer = {
         # Forgejo needs to be able to send emails for registration and password reset
-        # TODO: choose between local self-hosted and external 3rd party relaying service
+        # This sends our emails to Least Authority mail server which can relay them
         ENABLED = true;
-        PROTOCOL = "dummy";
-        FROM = "noreply@forge.of.tahoe-lafs.org";
+        PROTOCOL = "smtps";
+        SMTP_ADDR = "mail.latfa.net";
+        SMTP_PORT = 465;
+        FROM = "noreply@mail.of.tahoe-lafs.org";
+        USER = "noreply@latfa.net";
       };
       migrations = {
         ALLOWED_DOMAINS = "*.latfa.net, github.com, *.github.com, gitlab.com, *.gitlab.com, codeberg.org, *.codeberg.org, *.forgejo.org";
