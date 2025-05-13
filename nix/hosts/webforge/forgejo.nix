@@ -38,17 +38,6 @@
       indexer = {
         ISSUE_INDEXER_TYPE = "db";
       };
-      mailer = {
-        # Forgio needs to be able to send emails for registration and password reset
-        # And sendmail does not work - https://github.com/NixOS/nixpkgs/issues/103446
-        # not even with systemd.services.gitea.serviceConfig.RestrictAddressFamilies = [ "AF_NETLINK" ];
-        # So the mailer have to use smtp until this gets fixed upstream 
-        ENABLED = true;
-        PROTOCOL = "smtp";
-        SMTP_ADDR = "localhost";
-        SMTP_PORT = 25;
-        FROM = "noreply@forge.87b59b92.nip.io";
-      };
       migrations = {
         ALLOWED_DOMAINS = "*.latfa.net, github.com, *.github.com, gitlab.com, *.gitlab.com, codeberg.org, *.codeberg.org, *.forgejo.org";
       };
