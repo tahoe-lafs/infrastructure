@@ -43,10 +43,12 @@
       };
       mailer = {
         # Forgejo needs to be able to send emails for registration and password reset
-        # TODO: choose between local self-hosted and external 3rd party relaying service
+        # This sends our emails to Hetzner so we do not have to manage a relay server
         ENABLED = true;
-        PROTOCOL = "dummy";
-        FROM = "noreply@forge.87b59b92.nip.io";
+        PROTOCOL = "smtps";
+        SMTP_ADDR = "mail.your-server.de";
+        SMTP_PORT = 465;
+        FROM = "noreply@of.tahoe-lafs.org";
       };
       migrations = {
         ALLOWED_DOMAINS = "*.latfa.net, github.com, *.github.com, gitlab.com, *.gitlab.com, codeberg.org, *.codeberg.org, *.forgejo.org";
