@@ -41,6 +41,13 @@
       indexer = {
         ISSUE_INDEXER_TYPE = "db";
       };
+      mailer = {
+        # Forgejo needs to be able to send emails for registration and password reset
+        # TODO: choose between local self-hosted and external 3rd party relaying service
+        ENABLED = true;
+        PROTOCOL = "dummy";
+        FROM = "noreply@forge.87b59b92.nip.io";
+      };
       migrations = {
         ALLOWED_DOMAINS = "*.latfa.net, github.com, *.github.com, gitlab.com, *.gitlab.com, codeberg.org, *.codeberg.org, *.forgejo.org";
       };
