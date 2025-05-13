@@ -27,9 +27,11 @@
   boot.tmp.cleanOnBoot = true;
   zramSwap.enable = true;
 
+  # Be a good internet citizen
   networking.firewall = {
     enable = true;
-    allowPing = false;
+    allowPing = true;
+    rejectPackets = true;
   };
 
   security.acme = {
