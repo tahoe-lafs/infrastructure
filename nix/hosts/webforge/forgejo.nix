@@ -43,9 +43,13 @@
       };
       mailer = {
         # Forgejo needs to be able to send emails for registration and password reset
-        # TODO: choose between local self-hosted and external 3rd party relaying service
+        # And sendmail does not work - https://github.com/NixOS/nixpkgs/issues/103446
+        # not even with systemd.services.gitea.serviceConfig.RestrictAddressFamilies = [ "AF_NETLINK" ];
+        # So the mailer have to use smtp until this gets fixed upstream
         ENABLED = true;
-        PROTOCOL = "dummy";
+        PROTOCOL = "smtp";
+        SMTP_ADDR = "localhost";
+        SMTP_PORT = 25;
         FROM = "noreply@forge.of.tahoe-lafs.org";
       };
       migrations = {
