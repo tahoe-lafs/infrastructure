@@ -28,6 +28,9 @@
       user = config.services.forgejo.database.name;
     };
     settings = {
+      # Allow maintainers to register runners to this instance
+      # This does NOT implement any runners
+      # https://forgejo.org/docs/next/admin/actions/
       actions = {
         ENABLED = true;
         DEFAULT_ACTIONS_URL = "https://data.forgejo.org";
