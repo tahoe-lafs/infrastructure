@@ -5,6 +5,7 @@
     ./networking.nix
 
     ./forgejo.nix
+    ./mailserver.nix
     ./postgresql.nix
   ];
 
