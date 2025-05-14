@@ -212,6 +212,7 @@ in
         node: settings:
         lib.nameValuePair "tahoe.introducer-${node}" {
           description = "Tahoe LAFS node ${node}";
+          documentation = [ "info:tahoe-lafs" ];
           wantedBy = [ "multi-user.target" ];
           path = [ settings.package ];
           restartTriggers = [ config.environment.etc."tahoe-lafs/introducer-${node}.cfg".source ];
@@ -330,6 +331,7 @@ in
         node: settings:
         lib.nameValuePair "tahoe.${node}" {
           description = "Tahoe LAFS node ${node}";
+          documentation = [ "info:tahoe-lafs" ];
           wantedBy = [ "multi-user.target" ];
           path = [ settings.package ];
           restartTriggers = [ config.environment.etc."tahoe-lafs/${node}.cfg".source ];
