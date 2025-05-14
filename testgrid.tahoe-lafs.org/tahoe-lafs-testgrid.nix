@@ -8,9 +8,10 @@ let
   # The package from nixpkgs:
   #   package = pkgs.tahoe-lafs;
   # The upstream flake:
-  package = (builtins.getFlake
-    "github:tahoe-lafs/tahoe-lafs?ref=master").packages.x86_64-linux.default;
-in {
+  package =
+    (builtins.getFlake "github:tahoe-lafs/tahoe-lafs?ref=master").packages.x86_64-linux.default;
+in
+{
   # Configure Tahoe to run here.
   services.tahoe = {
 
@@ -35,42 +36,44 @@ in {
     # client.  On a more realistic deployment these would all be run
     # separately from other to make their failure modes as independent as
     # possible.
-    nodes = let
-      # XXX NixOS module doesn't support multi-introducer configuration.
-      introducer = "pb://flm2vcjxaxoyah3f2ufdk74augada55i@tcp:testgrid.tahoe-lafs.org:5000/s3kbdgg3j4ohifa633tt7yi25drl6jqa";
-    in {
-      alpha = {
-        inherit package;
-        nickname = "alpha-storage";
-        # XXX NixOS module requires we configure a web port even if we don't
-        # want one.
-        web.port = 2002;
-        storage.enable = true;
-        tub.location = "${config.networking.fqdn}:5002";
-        tub.port = 5002;
-        client.introducer = introducer;
+    nodes =
+      let
+        # XXX NixOS module doesn't support multi-introducer configuration.
+        introducer = "pb://flm2vcjxaxoyah3f2ufdk74augada55i@tcp:testgrid.tahoe-lafs.org:5000/s3kbdgg3j4ohifa633tt7yi25drl6jqa";
+      in
+      {
+        alpha = {
+          inherit package;
+          nickname = "alpha-storage";
+          # XXX NixOS module requires we configure a web port even if we don't
+          # want one.
+          web.port = 2002;
+          storage.enable = true;
+          tub.location = "${config.networking.fqdn}:5002";
+          tub.port = 5002;
+          client.introducer = introducer;
+        };
+        beta = {
+          inherit package;
+          nickname = "beta-storage";
+          # XXX
+          web.port = 2003;
+          storage.enable = true;
+          tub.location = "${config.networking.fqdn}:5003";
+          tub.port = 5003;
+          client.introducer = introducer;
+        };
+        gamma = {
+          inherit package;
+          nickname = "gamma-storage";
+          # XXX
+          web.port = 2004;
+          storage.enable = true;
+          tub.location = "${config.networking.fqdn}:5004";
+          tub.port = 5004;
+          client.introducer = introducer;
+        };
       };
-      beta = {
-        inherit package;
-        nickname = "beta-storage";
-        # XXX
-        web.port = 2003;
-        storage.enable = true;
-        tub.location = "${config.networking.fqdn}:5003";
-        tub.port = 5003;
-        client.introducer = introducer;
-      };
-      gamma = {
-        inherit package;
-        nickname = "gamma-storage";
-        # XXX
-        web.port = 2004;
-        storage.enable = true;
-        tub.location = "${config.networking.fqdn}:5004";
-        tub.port = 5004;
-        client.introducer = introducer;
-      };
-    };
   };
 
   # The current nixpkgs service definition isn't compatible with the upstream

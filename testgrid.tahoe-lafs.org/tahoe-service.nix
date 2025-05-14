@@ -214,9 +214,7 @@ in
           description = "Tahoe LAFS node ${node}";
           wantedBy = [ "multi-user.target" ];
           path = [ settings.package ];
-          restartTriggers = [
-            config.environment.etc."tahoe-lafs/introducer-${node}.cfg".source
-          ];
+          restartTriggers = [ config.environment.etc."tahoe-lafs/introducer-${node}.cfg".source ];
           serviceConfig = {
             Type = "simple";
             # Believe it or not, Tahoe is very brittle about the order of
@@ -266,8 +264,7 @@ in
         }
       );
       users.groups = lib.flip lib.mapAttrs' cfg.introducers (
-        node: _:
-        lib.nameValuePair "tahoe.introducer-${node}" { }
+        node: _: lib.nameValuePair "tahoe.introducer-${node}" { }
       );
     })
     (lib.mkIf (cfg.nodes != { }) {
@@ -335,9 +332,7 @@ in
           description = "Tahoe LAFS node ${node}";
           wantedBy = [ "multi-user.target" ];
           path = [ settings.package ];
-          restartTriggers = [
-            config.environment.etc."tahoe-lafs/${node}.cfg".source
-          ];
+          restartTriggers = [ config.environment.etc."tahoe-lafs/${node}.cfg".source ];
           serviceConfig = {
             Type = "simple";
             # The comments for the introducer ExecStart config above apply here as well.
@@ -371,10 +366,7 @@ in
           home = "/var/db/tahoe-lafs/${node}";
         }
       );
-      users.groups = lib.flip lib.mapAttrs' cfg.nodes (
-        node: _:
-        lib.nameValuePair "tahoe.${node}" { }
-      );
+      users.groups = lib.flip lib.mapAttrs' cfg.nodes (node: _: lib.nameValuePair "tahoe.${node}" { });
     })
   ];
 }
