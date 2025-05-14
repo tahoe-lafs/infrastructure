@@ -1,4 +1,5 @@
-{ ... }: {
+{ ... }:
+{
   # Initial empty root password for easy login:
   users.users.root.initialHashedPassword = "";
   services.openssh.settings.PermitRootLogin = "prohibit-password";
