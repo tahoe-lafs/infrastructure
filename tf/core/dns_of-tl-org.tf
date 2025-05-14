@@ -4,8 +4,8 @@ resource "hetznerdns_zone" "of-tl-org" {
   ttl  = 3600
 }
 
-# Root records of this zone
-resource "hetznerdns_record" "of-tl-org" {
+# NS records of this sub-zone
+resource "hetznerdns_record" "of-tl-org_ns" {
   for_each = toset([
     "hydrogen.ns.hetzner.com.",
     "oxygen.ns.hetzner.com.",
