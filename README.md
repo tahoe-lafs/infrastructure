@@ -5,13 +5,15 @@ The software that defines the Tahoe-LAFS project's infrastructure.
 ## Abstract
 
 This repository was initially created in Sep 2022 as an effort to deploy and
-manage a `testgrid` server using NixOS (now retired).
+manage a `testgrid` server using NixOS.
 
 Since January 2025, some members of the community are seeking to re-use this repository
 to deploy and manage some new [systems](#managed-systems).
 
 In addition to the [Nix](https://nixos.org/) code covering the software installed on those servers,
 an [OpenToFu](https://opentofu.org/) plan should handle the definition of the related infrastructure (e.g.: VMs and DNS records).
+
+Part - if not all - of the infrastructure defined here should be monitored by the [infrastructure-upptime](https://github.com/Tahoe-LAFS/infrastructure-upptime) repository and show up in the related [status page](https://tahoe-lafs.github.io/infrastructure-upptime/).
 
 **Warning**: The content of this repository is currently a work in progress. See the [Roadmap](docs/Roadmap.md) for more information.
 
