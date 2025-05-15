@@ -212,11 +212,10 @@ in
         node: settings:
         lib.nameValuePair "tahoe.introducer-${node}" {
           description = "Tahoe LAFS node ${node}";
+          documentation = [ "info:tahoe-lafs" ];
           wantedBy = [ "multi-user.target" ];
           path = [ settings.package ];
-          restartTriggers = [
-            config.environment.etc."tahoe-lafs/introducer-${node}.cfg".source
-          ];
+          restartTriggers = [ config.environment.etc."tahoe-lafs/introducer-${node}.cfg".source ];
           serviceConfig = {
             Type = "simple";
             # Believe it or not, Tahoe is very brittle about the order of
@@ -262,12 +261,11 @@ in
         lib.nameValuePair "tahoe.introducer-${node}" {
           isSystemUser = true;
           group = "tahoe.introducer-${node}";
-          home = "/var/db/tahoe-lafs/introducer-${node}";
+          home = "/var/lib/tahoe-lafs/introducer-${node}";
         }
       );
       users.groups = lib.flip lib.mapAttrs' cfg.introducers (
-        node: _:
-        lib.nameValuePair "tahoe.introducer-${node}" { }
+        node: _: lib.nameValuePair "tahoe.introducer-${node}" { }
       );
     })
     (lib.mkIf (cfg.nodes != { }) {
@@ -333,11 +331,10 @@ in
         node: settings:
         lib.nameValuePair "tahoe.${node}" {
           description = "Tahoe LAFS node ${node}";
+          documentation = [ "info:tahoe-lafs" ];
           wantedBy = [ "multi-user.target" ];
           path = [ settings.package ];
-          restartTriggers = [
-            config.environment.etc."tahoe-lafs/${node}.cfg".source
-          ];
+          restartTriggers = [ config.environment.etc."tahoe-lafs/${node}.cfg".source ];
           serviceConfig = {
             Type = "simple";
             # The comments for the introducer ExecStart config above apply here as well.
@@ -368,13 +365,10 @@ in
         lib.nameValuePair "tahoe.${node}" {
           isSystemUser = true;
           group = "tahoe.${node}";
-          home = "/var/db/tahoe-lafs/${node}";
+          home = "/var/lib/tahoe-lafs/${node}";
         }
       );
-      users.groups = lib.flip lib.mapAttrs' cfg.nodes (
-        node: _:
-        lib.nameValuePair "tahoe.${node}" { }
-      );
+      users.groups = lib.flip lib.mapAttrs' cfg.nodes (node: _: lib.nameValuePair "tahoe.${node}" { });
     })
   ];
 }
