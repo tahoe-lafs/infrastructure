@@ -5,21 +5,46 @@ resource "hetznerdns_zone" "tl-org" {
   ttl  = 3600
 }
 
-# Root records of this zone
-resource "hetznerdns_record" "tl-org" {
+# NS records of the zone
+resource "hetznerdns_record" "tl-org_ns" {
   for_each = {
-    # <type>-<index> = <value>
-    ns-1  = "hydrogen.ns.hetzner.com.",
-    ns-2  = "oxygen.ns.hetzner.com.",
-    ns-3  = "helium.ns.hetzner.de.",
-    mx-1  = "50 tahoe-lafs.org.",
-    txt-1 = "v=spf1 ip4:74.207.252.227/32",
-    a-1   = "74.207.252.227"
+    primary   = "hydrogen.ns.hetzner.com."
+    secondary = "oxygen.ns.hetzner.com."
+    tertiary  = "helium.ns.hetzner.de."
   }
 
   name    = "@"
-  type    = upper(split("-", each.key)[0])
+  type    = "NS"
   value   = each.value
+  ttl     = hetznerdns_zone.tl-org.ttl
+  zone_id = hetznerdns_zone.tl-org.id
+}
+
+# Other root records of this zone
+resource "hetznerdns_record" "tl-org_mx" {
+  for_each = toset([
+    "50 tahoe-lafs.org.",
+  ])
+
+  name    = "@"
+  type    = "MX"
+  value   = each.value
+  ttl     = hetznerdns_zone.tl-org.ttl
+  zone_id = hetznerdns_zone.tl-org.id
+}
+
+resource "hetznerdns_record" "tl-org_spf1" {
+  name    = "@"
+  type    = "MX"
+  value   = "v=spf1 ip4:74.207.252.227/32"
+  ttl     = hetznerdns_zone.tl-org.ttl
+  zone_id = hetznerdns_zone.tl-org.id
+}
+
+resource "hetznerdns_record" "tl-org_ipv4" {
+  name    = "@"
+  type    = "A"
+  value   = "74.207.252.227"
   ttl     = hetznerdns_zone.tl-org.ttl
   zone_id = hetznerdns_zone.tl-org.id
 }
