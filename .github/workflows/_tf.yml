@@ -43,6 +43,9 @@ on:
       hcloud_token:
         description: 'API token for Hetzner Cloud'
         required: false
+      hdns_token:
+        description: 'API token for Hetzner DNS'
+        required: false
 
 jobs:
   tf:
@@ -56,6 +59,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_access_key }}
       AWS_DEFAULT_REGION: ${{ inputs.aws_default_region }}
       TF_VAR_hcloud_token: ${{ secrets.hcloud_token }}
+      TF_VAR_hdns_token: ${{ secrets.hdns_token }}
     permissions:
       pull-requests: write
       contents: read
