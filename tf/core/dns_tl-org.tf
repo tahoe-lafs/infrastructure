@@ -49,6 +49,20 @@ resource "hetznerdns_record" "tl-org_ipv4" {
   zone_id = hetznerdns_zone.tl-org.id
 }
 
+# Delegation for tahoeperf sub-domain
+resource "hetznerdns_record" "tl-org_perf" {
+  for_each = {
+    primary   = "ns-cloud1.googledomains.com."
+    secondary = "ns-cloud2.googledomains.com."
+  }
+
+  name    = "tahoeperf"
+  type    = "NS"
+  value   = each.value
+  ttl     = hetznerdns_zone.tl-org.ttl
+  zone_id = hetznerdns_zone.tl-org.id
+}
+
 # Web landing page
 resource "hetznerdns_record" "tl-org_www" {
   name    = "www"
@@ -74,6 +88,24 @@ resource "hetznerdns_record" "tl-org_lists" {
   name    = "lists"
   type    = upper(split("-", each.key)[0])
   value   = each.value
+  ttl     = hetznerdns_zone.tl-org.ttl
+  zone_id = hetznerdns_zone.tl-org.id
+}
+
+# Buildmaster
+resource "hetznerdns_record" "tl-org_buildmaster" {
+  name    = "buildmaster"
+  type    = "CNAME"
+  value   = "tahoe-lafs.org."
+  ttl     = hetznerdns_zone.tl-org.ttl
+  zone_id = hetznerdns_zone.tl-org.id
+}
+
+# Wormwhole
+resource "hetznerdns_record" "tl-org_wormhole" {
+  name    = "wormhole"
+  type    = "CNAME"
+  value   = "relay.magic-wormhole.io."
   ttl     = hetznerdns_zone.tl-org.ttl
   zone_id = hetznerdns_zone.tl-org.id
 }
