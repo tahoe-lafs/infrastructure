@@ -4,7 +4,10 @@
     ./hardware-configuration.nix
     ./networking.nix
 
+
     ./web-landing-page.nix
+    ./forgejo.nix
+    ./postgresql.nix
   ];
 
   networking.hostName = "webforge";
