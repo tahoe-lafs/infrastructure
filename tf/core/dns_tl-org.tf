@@ -1,0 +1,128 @@
+# DNS zone for tahoe-lafs.org
+# with 1-hour TTL to support migration
+resource "hetznerdns_zone" "tl-org" {
+  name = "tahoe-lafs.org"
+  ttl  = 3600
+}
+
+# NS records of the zone
+resource "hetznerdns_record" "tl-org_ns" {
+  for_each = {
+    primary   = "hydrogen.ns.hetzner.com."
+    secondary = "oxygen.ns.hetzner.com."
+    tertiary  = "helium.ns.hetzner.de."
+  }
+
+  name    = "@"
+  type    = "NS"
+  value   = each.value
+  ttl     = hetznerdns_zone.tl-org.ttl
+  zone_id = hetznerdns_zone.tl-org.id
+}
+
+# Other root records of this zone
+resource "hetznerdns_record" "tl-org_mx" {
+  for_each = toset([
+    "50 tahoe-lafs.org.",
+  ])
+
+  name    = "@"
+  type    = "MX"
+  value   = each.value
+  ttl     = hetznerdns_zone.tl-org.ttl
+  zone_id = hetznerdns_zone.tl-org.id
+}
+
+resource "hetznerdns_record" "tl-org_spf1" {
+  name    = "@"
+  type    = "MX"
+  value   = "v=spf1 ip4:74.207.252.227/32"
+  ttl     = hetznerdns_zone.tl-org.ttl
+  zone_id = hetznerdns_zone.tl-org.id
+}
+
+resource "hetznerdns_record" "tl-org_ipv4" {
+  name    = "@"
+  type    = "A"
+  value   = "74.207.252.227"
+  ttl     = hetznerdns_zone.tl-org.ttl
+  zone_id = hetznerdns_zone.tl-org.id
+}
+
+# Delegation for tahoeperf sub-domain
+resource "hetznerdns_record" "tl-org_perf" {
+  for_each = {
+    primary   = "ns-cloud1.googledomains.com."
+    secondary = "ns-cloud2.googledomains.com."
+  }
+
+  name    = "tahoeperf"
+  type    = "NS"
+  value   = each.value
+  ttl     = hetznerdns_zone.tl-org.ttl
+  zone_id = hetznerdns_zone.tl-org.id
+}
+
+# Web landing page
+resource "hetznerdns_record" "tl-org_www" {
+  name    = "www"
+  type    = "CNAME"
+  value   = "tahoe-lafs.org."
+  ttl     = hetznerdns_zone.tl-org.ttl
+  zone_id = hetznerdns_zone.tl-org.id
+}
+
+# Mailing lists
+resource "hetznerdns_record" "tl-org_lists" {
+  for_each = {
+    # <type>-<index> = <value>
+    mx-1   = "5 smtp1.osuosl.org.",
+    mx-2   = "5 smtp2.osuosl.org.",
+    mx-3   = "5 smtp3.osuosl.org.",
+    mx-4   = "5 smtp4.osuosl.org.",
+    txt-1  = "v=spf1 mx include:_spf.osuosl.org ~all",
+    a-1    = "140.211.9.53"
+    aaaa-1 = "2605:bc80:3010:104::8cd3:935"
+  }
+
+  name    = "lists"
+  type    = upper(split("-", each.key)[0])
+  value   = each.value
+  ttl     = hetznerdns_zone.tl-org.ttl
+  zone_id = hetznerdns_zone.tl-org.id
+}
+
+# Buildmaster
+resource "hetznerdns_record" "tl-org_buildmaster" {
+  name    = "buildmaster"
+  type    = "CNAME"
+  value   = "tahoe-lafs.org."
+  ttl     = hetznerdns_zone.tl-org.ttl
+  zone_id = hetznerdns_zone.tl-org.id
+}
+
+# Wormwhole
+resource "hetznerdns_record" "tl-org_wormhole" {
+  name    = "wormhole"
+  type    = "CNAME"
+  value   = "relay.magic-wormhole.io."
+  ttl     = hetznerdns_zone.tl-org.ttl
+  zone_id = hetznerdns_zone.tl-org.id
+}
+
+# Testgrid - trac#4160
+resource "hetznerdns_record" "tl-org_testgrid_ipv4" {
+  name    = "testgrid"
+  type    = "A"
+  value   = hcloud_server.testgrid.ipv4_address
+  ttl     = hetznerdns_zone.tl-org.ttl
+  zone_id = hetznerdns_zone.tl-org.id
+}
+
+resource "hetznerdns_record" "tl-org_testgrid_ipv6" {
+  name    = "testgrid"
+  type    = "AAAA"
+  value   = hcloud_server.testgrid.ipv6_address
+  ttl     = hetznerdns_zone.tl-org.ttl
+  zone_id = hetznerdns_zone.tl-org.id
+}
