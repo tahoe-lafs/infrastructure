@@ -28,22 +28,21 @@
     enable = true;
 
     # Configure the virtualhosts to serve the pages
-    # TODO: Replace 87b59b92.nip.io by tahoe-lafs.org below when ready - trac#4162
     virtualHosts = {
       # Define a live site to serve the content generated from the main branch
       # See https://github.com/tahoe-lafs/web-landing-page
-      "live.www.87b59b92.nip.io" = {
+      "home.of.tahoe-lafs.org" = {
         enableACME = true;
         forceSSL = true;
         root = "/var/www/live";
-        serverAliases = [
-          "www.87b59b92.nip.io"
-          "87b59b92.nip.io"
-        ];
+        # serverAliases = [
+        #   "www.tahoe-lafs.org"
+        #   "tahoe-lafs.org"
+        # ];
         extraConfig = ''
           # Redirect to the main domain
-          if ($http_host != 87b59b92.nip.io) {
-            rewrite ^(.*)$ https://87b59b92.nip.io$1 redirect;
+          if ($http_host != home.of.tahoe-lafs.org) {
+            rewrite ^(.*)$ https://home.of.tahoe-lafs.org$1 redirect;
           }
           # Redirect unmigrated pages to the legacy site:
           # - all trac projects - tahoe-lafs is pending for Forgejo, others are mostly stalled
@@ -51,20 +50,20 @@
           # - pipermail - still serving some mailing archive (not older than 02-Dec-2021) before lists.tahoe-lafs.org
           # - hacktahoelafs - to be migrated as a simple blog post or a special page
           # - user home dirs (e.g. ~trac, ~warner and ~zooko) - still holds files referred from some other places
-          rewrite (trac|downloads|pipermail|hacktahoelafs|~[^/]+)(|/.*)$ https://legacy.87b59b92.nip.io/$1$2 redirect;
+          rewrite (trac|downloads|pipermail|hacktahoelafs|~[^/]+)(|/.*)$ https://legacy.of.tahoe-lafs.org/$1$2 redirect;
         '';
       };
 
       # Define a preview site to serve the content generated from per pull-requests
       # See https://github.com/tahoe-lafs/web-landing-page/pulls
-      "preview.www.87b59b92.nip.io" = {
+      "preview.of.tahoe-lafs.org" = {
         enableACME = true;
         forceSSL = true;
         root = "/var/www/preview";
       };
 
       # Proxy the legacy site under a separate hostname to allow (read) access if needed
-      "legacy.87b59b92.nip.io" = {
+      "legacy.of.tahoe-lafs.org" = {
         enableACME = true;
         forceSSL = true;
         locations = {

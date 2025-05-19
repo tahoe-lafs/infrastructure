@@ -4,7 +4,7 @@
     # The service and the firewall should already be configured elsewhere - see configuration.nix
     # Configure the virtualhost for Forgejo
     virtualHosts = {
-      "forge.87b59b92.nip.io" = {
+      "forge.of.tahoe-lafs.org" = {
         enableACME = true;
         forceSSL = true;
         locations = {
@@ -46,7 +46,7 @@
         # TODO: choose between local self-hosted and external 3rd party relaying service
         ENABLED = true;
         PROTOCOL = "dummy";
-        FROM = "noreply@forge.87b59b92.nip.io";
+        FROM = "noreply@forge.of.tahoe-lafs.org";
       };
       migrations = {
         ALLOWED_DOMAINS = "*.latfa.net, github.com, *.github.com, gitlab.com, *.gitlab.com, codeberg.org, *.codeberg.org, *.forgejo.org";
@@ -56,7 +56,7 @@
       };
       server = {
         HTTP_PORT = 3000;
-        ROOT_URL = "https://forge.87b59b92.nip.io/";
+        ROOT_URL = "https://forge.of.tahoe-lafs.org/";
       };
       service = {
         REGISTER_EMAIL_CONFIRM = true;

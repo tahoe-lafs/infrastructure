@@ -36,11 +36,11 @@ EOF
 resource "hcloud_rdns" "webforge_ipv4" {
   server_id  = hcloud_server.webforge.id
   ip_address = hcloud_server.webforge.ipv4_address
-  dns_ptr    = "webforge.tahoe-lafs.org"
+  dns_ptr    = "webforge.of.tahoe-lafs.org"
 }
 
 resource "hcloud_rdns" "webforge_ipv6" {
   server_id  = hcloud_server.webforge.id
   ip_address = hcloud_server.webforge.ipv6_address
-  dns_ptr    = "webforge.tahoe-lafs.org"
+  dns_ptr    = "webforge.of.tahoe-lafs.org"
 }
