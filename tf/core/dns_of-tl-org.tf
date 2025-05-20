@@ -47,6 +47,7 @@ resource "hetznerdns_record" "tl-org-of_webforge_aliases" {
   for_each = toset([
     "forge",
     "home",
+    "legacy",
     "preview",
   ])
 
