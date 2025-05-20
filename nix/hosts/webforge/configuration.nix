@@ -11,7 +11,7 @@
   ];
 
   networking.hostName = "webforge";
-  networking.domain = "tahoe-lafs.org";
+  networking.domain = "of.tahoe-lafs.org";
 
   # Open the ports required for a web server
   networking.firewall = {
