@@ -34,11 +34,10 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs;
-    [
-      # Let us check out and update the system configuration repository.
-      gitMinimal
-    ];
+  environment.systemPackages = with pkgs; [
+    # Let us check out and update the system configuration repository.
+    gitMinimal
+  ];
 
   # We aren't interested in old logs.
   services.journald.extraConfig = ''
