@@ -3,10 +3,15 @@
     ../../common
     ./hardware-configuration.nix
     ./networking.nix
+
+
+    ./web-landing-page.nix
+    ./forgejo.nix
+    ./postgresql.nix
   ];
 
   networking.hostName = "webforge";
-  networking.domain = "tahoe-lafs.org";
+  networking.domain = "of.tahoe-lafs.org";
 
   # Open the ports required for a web server
   networking.firewall = {
