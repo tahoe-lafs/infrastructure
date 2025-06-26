@@ -56,16 +56,20 @@
         ALLOWED_DOMAINS = "*.latfa.net, github.com, *.github.com, gitlab.com, *.gitlab.com, codeberg.org, *.codeberg.org, *.forgejo.org";
       };
       oauth2_client = {
-        UPDATE_AVATAR = true;
+        # ACCOUNT_LINKING = "login";        # no automatic linking based on username or email (by default)
+        # ENABLE_AUTO_REGISTRATION = false; # force user to choose to register or link account (by default)
+        REGISTER_EMAIL_CONFIRM = false;     # override the service setting to avoid confirmation when registering via oauth2
+        UPDATE_AVATAR = true;               # update avatar if available from the OAuth2 provider
       };
       server = {
         HTTP_PORT = 3000;
         ROOT_URL = "https://forge.of.tahoe-lafs.org/";
       };
       service = {
-        REGISTER_EMAIL_CONFIRM = true;
-        ENABLE_CAPTCHA = true;
-        CAPTCHA_TYPE = "image";
+        DISABLE_REGISTER = true;         # only admin can register until the migration is completed
+        # REGISTER_EMAIL_CONFIRM = true; # when not registering via oauth2
+        # ENABLE_CAPTCHA = true;         # to reduce spam registration
+        # CAPTCHA_TYPE = "image";
       };
     };
   };
