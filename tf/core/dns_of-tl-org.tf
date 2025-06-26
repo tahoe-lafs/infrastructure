@@ -20,7 +20,6 @@ resource "hetznerdns_record" "tl-org_ns" {
   name    = "@"
   type    = "NS"
   value   = each.value
-  ttl     = hetznerdns_zone.tl-org.ttl
   zone_id = hetznerdns_zone.tl-org.id
 }
 # TODO: Move the above in a separate `dns_tl-org.tf` file
@@ -31,7 +30,6 @@ resource "hetznerdns_record" "tl-org-of_webforge_ipv4" {
   name    = "webforge.of"
   type    = "A"
   value   = hcloud_server.webforge.ipv4_address
-  ttl     = hetznerdns_zone.tl-org.ttl
   zone_id = hetznerdns_zone.tl-org.id
 }
 
@@ -39,7 +37,6 @@ resource "hetznerdns_record" "tl-org-of_webforge_ipv6" {
   name    = "webforge.of"
   type    = "AAAA"
   value   = hcloud_server.webforge.ipv6_address
-  ttl     = hetznerdns_zone.tl-org.ttl
   zone_id = hetznerdns_zone.tl-org.id
 }
 
