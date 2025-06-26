@@ -42,7 +42,6 @@ resource "hetznerdns_record" "tl-org-of_webforge_ipv6" {
 
 resource "hetznerdns_record" "tl-org-of_webforge_aliases" {
   for_each = toset([
-    "forge",
     "home",
     "legacy",
     "preview",
@@ -52,6 +51,21 @@ resource "hetznerdns_record" "tl-org-of_webforge_aliases" {
   type    = "CNAME"
   value   = "webforge.of"
   ttl     = "600"
+  zone_id = hetznerdns_zone.tl-org.id
+}
+
+# MX and TXT for forge.of forbid CNAME, so re-use the A/AAAA
+resource "hetznerdns_record" "tl-org-of_forge_ipv4" {
+  name    = "forge.of"
+  type    = "A"
+  value   = hcloud_server.webforge.ipv4_address
+  zone_id = hetznerdns_zone.tl-org.id
+}
+
+resource "hetznerdns_record" "tl-org-of_forge_ipv6" {
+  name    = "forge.of"
+  type    = "AAAA"
+  value   = hcloud_server.webforge.ipv6_address
   zone_id = hetznerdns_zone.tl-org.id
 }
 
