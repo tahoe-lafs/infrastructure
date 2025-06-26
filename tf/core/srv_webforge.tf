@@ -26,8 +26,9 @@ EOF
   ]
   lifecycle {
     ignore_changes = [
-      # Ignore changes to ssh_keys post installation
+      # Ignore some post installation changes
       ssh_keys,
+      user_data,
     ]
   }
 }
