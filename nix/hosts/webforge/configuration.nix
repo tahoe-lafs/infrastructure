@@ -4,7 +4,7 @@
     ./hardware-configuration.nix
     ./networking.nix
 
-
+    ./backup.nix
     ./web-landing-page.nix
     ./forgejo.nix
     ./mailserver.nix
