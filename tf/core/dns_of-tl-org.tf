@@ -50,7 +50,7 @@ resource "hetznerdns_record" "tl-org-of_webforge_aliases" {
 
   name    = "${each.value}.of"
   type    = "CNAME"
-  value   = "webforge.of.tahoe-lafs.org."
+  value   = "webforge.of"
   ttl     = "600"
   zone_id = hetznerdns_zone.tl-org.id
 }
