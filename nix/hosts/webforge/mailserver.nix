@@ -6,7 +6,8 @@
   # Only to send email from Forgejo
   mailserver = {
     enable = true;
-    fqdn = "forge.of.tahoe-lafs.org";
+    # Better announce ourself according to the reverse lookup
+    fqdn = "webforge.of.tahoe-lafs.org";
     domains = [
       "forge.of.tahoe-lafs.org"
     ];
