@@ -23,7 +23,20 @@
       "backup_script	" + ./backup_pgsql.sh + "	postgres/\n";
   };
 
-  # TODO: Off-site backups
-  # services.borgbackup.jobs.rsnapshot = {
-  # };
+  # Off-site backups
+  sops.secrets."backup/encryptionPassword" = {};
+  sops.secrets."backup/sshKey" = {};
+
+  services.borgbackup.jobs.rsnapshot = {
+    paths = "/var/rsnapshot/daily.0";
+    repo = "x6p4a1ph@x6p4a1ph.repo.borgbase.com:repo";
+    startAt = [ ]; # Triggered by rsnapshot cmd_postexec
+    encryption = {
+      mode = "repokey-blake2";
+      passCommand = "cat \"${config.sops.secrets."backup/encryptionPassword".path}\"";
+    };
+    environment = {
+      BORG_RSH = "ssh -i \"${config.sops.secrets."backup/sshKey".path}\" -o StrictHostKeyChecking=accept-new";
+    };
+  };
 }
