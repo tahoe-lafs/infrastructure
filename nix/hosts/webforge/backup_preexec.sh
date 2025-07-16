@@ -9,4 +9,4 @@ set -o pipefail # exit on any failed command in pipes
 # Start services before backup
 systemctl stop \
 	  postfix.service \
-	  forgejo.service \
+	  forgejo.service

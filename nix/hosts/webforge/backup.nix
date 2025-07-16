@@ -17,7 +17,7 @@
       "cmd_preexec	" + ./backup_preexec.sh + "\n" +
       "cmd_postexec	" + ./backup_postexec.sh + "\n" +
       "backup	" + config.mailserver.dkimKeyDirectory + "	opendkim_keys/\n" +
-      "backup	" + "/var/lib/postfix/queue" + "	postfix_queue/\n" +
+      "backup	" + config.services.postfix.config.queue_directory + "	postfix_queue/\n" +
       "backup	" + "/var/www" + "	www_sites/\n" +
       "backup	" + config.services.forgejo.stateDir + "	forgejo_data/\n" +
       "backup_script	" + ./backup_pgsql.sh + "	postgres/\n";
