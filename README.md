@@ -55,53 +55,76 @@ More info:
 - [MoveOffTrac](https://github.com/tahoe-lafs/MoveOffTrac) repository
 - [MoveOffTrac](https://tahoe-lafs.org/trac/tahoe-lafs/wiki/MoveOffTrac) wiki page
 
-## Deployment Workflow
+## Secrets Management
 
-This section describes how the resources defined in this repository should be deployed.
+This repository relies on `sops` ([Secure OPS](https://github.com/getsops/sops)) to manage the secrets required for the [software deployment](#software-deployment) by encrypting files according to a set of trusted public PGP keys defined in `secrets/.public_keys`.
 
-### Underlying Infrastructure
+Those keys can be managed with `gpg` and a valid private PGP key has to be accessible via `gpg-agent` (see [notes](#notes)).
+
+In order to facilitate the installation of those requirements, this repository provides a `nix-shell` which allows to directly interact with the secrets:
+
+* `sops edit secrets/<sysname>.yaml`
+* `sops decrypt secrets/<sysname>.yaml`
+* `sops updatekeys secrets/common.yaml`
+* `gpg --list-keys`
+
+**Notes**:
+
+The `extra` socket of a local `gpg-agent` can eventually be forwarded to a remote machine.
+Assuming the local user id is 1000 and the remote is 2000:
+
+```
+ssh -o "StreamLocalBindUnlink yes" -o "RemoteForward /run/user/2000/gnupg/S.gpg-agent:/run/user/1000/gnupg/S.gpg-agent.extra" user@example.com
+```
+
+Although, the remote directory needs to exists first (e.g. `/run/user/2000/gnupg`)!
+
+## Initial Deployment
+
+This section describes how the resources defined in this repository should be deployed for the first time (a.k.a provisioning).
+
+### Infrastructure Provisioning
 
 1. Ensure the relevant ssh public keys are defined in the relevant Hetzner project (e.g.: Tahoe-LAFS)
 2. Create a new Debian VPS referring to at least one ssh key in the same project
 3. Infect the VPS with NixOS (e.g.: using `cloud-init`)
 4. Publish the new A/AAAA/PTR/CNAME DNS records the related zone (e.g.: `tahoe-lafs.org` hosted by Gandi)
 
-### OS and Software
-
-###  Provisioning
+### Software Provisioning
 
 This section describes how to proceed for the first deployment of a NixOS server.
 
-The NixOS configuration has to be manually deployed at least once using:
-
-```
-nixos-rebuild switch --target-host the-remote-host-to-deploy
-```
-
-This first deployment should bootstrap (or fix) the requirements for the automation of the next ones:
-
-1. Retrieve the the public ssh key of the server deployed earlier and
-   add/update the ssh `known_hosts` files (in this repository and locally)
-2. Convert this public ssh key in a gpg one to encrypt the secrets with sops,
+1. Retrieve the public ssh key of the server provisioned earlier (`ssh-keyscan`) and
+   add/update the `nix/known_hosts` file accordingly
+2. Convert this public ssh key in a PGP one (`ssh-to-pgp`) to encrypt the secrets with `sops`,
    so the server it-self will be able to decrypt the secrets it needs.
+3. Add this public ssh key as a deploy key with read access to this repository
+4. Once defined in the code (under `nix/hosts/<sysname>/configuration.nix`),
+   the `nixosConfiguration` for this new system has to be manually deployed (at least one time):
 
-### Continuous Deployment
+   ```
+   nixos-rebuild switch --flake .#<sysname> --target-host <hostname>
+   ```
+
+This first deployment should bootstrap (or fix) the requirements for the automation of the next ones.
+
+## Continuous Deployment
 
 Subsequent deployment should be triggered by GHA when merging a PR into the main branch.
 
-#### Underlying Infrastructure
+### Infrastructure Deployment
 
 Assuming OpenToFu is used, any changes to the existing plan should be automatically verified and
 described in a comment added on the pull request.
 
 Most failures should be detailed with the relevant error messages also published in this comment.
 
-#### OS and Software
+### Software Deployment
 
 Assuming this repository has been configured with:
 
-- a secret ssh (private) key to interact with the OS already [provisioned](#provisioning),
-- some (public) deployment (ssh) keys allowing each [provisioned](#provisioning) servers to checkout the Nix code,
+- a secret ssh (private) key to interact with the OS already [provisioned](#software-provisioning),
+- some (public) deployment (ssh) keys allowing each [provisioned](#software-provisioning) servers to checkout the Nix code,
 
 a pull request would automatically run `nix flake check` which should trigger the `nix build` of
 all the `nixosConfiguration` and their dependencies (could take a while).
