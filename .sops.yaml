@@ -9,6 +9,8 @@ keys:
   # First the GPG fingerprints of the admin (hardware token recommanded)
   - &adm_btlogy 411eb16d13b422490feba1155a7a09f0c279fcd6
   - &adm_hacklschorsch 5244970fbec8aa66658ec4b6d7d4a441431a73f1
+  - &adm_last-resort-a eaf916fd9ccda8288b9c5e3a7cc75588b18b3e9b
+  - &adm_last-resort-c a229968d0fa44960493ea207619b4427113ef6c8
   # Then the GPG fingerprints derivated of the sshd RSA key of the servers
   # which can be obtain by running the following command on the server
   # nix-shell -p ssh-to-pgp --run "ssh-to-pgp -i /etc/ssh/ssh_host_rsa_key"
@@ -23,15 +25,21 @@ creation_rules:
     - pgp:
       - *adm_btlogy
       - *adm_hacklschorsch
+      - *adm_last-resort-a
+      - *adm_last-resort-c
       - *srv_webforge
   - path_regex: secrets/webforge\.(yaml|json|env|ini)$
     key_groups:
     - pgp:
       - *adm_btlogy
       - *adm_hacklschorsch
+      - *adm_last-resort-a
+      - *adm_last-resort-c
       - *srv_webforge
   - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
     key_groups:
     - pgp:
       - *adm_btlogy
       - *adm_hacklschorsch
+      - *adm_last-resort-a
+      - *adm_last-resort-c
