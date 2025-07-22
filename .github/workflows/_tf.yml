@@ -28,85 +28,92 @@ on:
         required: false
         type: string
         default: ''
-      aws_default_region:
-        description: 'AWS default region'
-        required: false
+      sops_env:
+        description: 'Path to the SOPS environment file to use'
+        required: true
         type: string
-        default: 'eu-central-1'
     secrets:
-      aws_access_key_id:
-        description: 'AWS access key id'
-        required: false
-      aws_secret_access_key:
-        description: 'AWS secret access key'
-        required: false
-      hcloud_token:
-        description: 'API token for Hetzner Cloud'
-        required: false
-      hdns_token:
-        description: 'API token for Hetzner DNS'
-        required: false
+      sops_key:
+        description: 'PGP private key to decrypt SOPS file(s)'
+        required: true
 
 jobs:
   tf:
     name: OpenToFu
     runs-on: ${{ inputs.gh_runner_version }}
-    defaults:
-      run:
-        working-directory: ${{ inputs.tf_dir }}
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key_id }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_access_key }}
-      AWS_DEFAULT_REGION: ${{ inputs.aws_default_region }}
-      TF_VAR_hcloud_token: ${{ secrets.hcloud_token }}
-      TF_VAR_hdns_token: ${{ secrets.hdns_token }}
     permissions:
       pull-requests: write
       contents: read
+    env:
+      # To silent an error when calling nix-shell
+      # FIXME: try to use only the flake?
+      NIX_PATH: nixpkgs=channel:nixos-unstable
 
     steps:
     - name: Checkout
       id: checkout
       uses: actions/checkout@v4
 
-    - name: Setup
-      id: setup
-      uses: opentofu/setup-opentofu@v1
-      with:
-        tofu_version: ${{ inputs.tf_version }}
+    - name: Install Nix
+      id: install_nix
+      uses: nixbuild/nix-quick-install-action@v30
+
+    - name: Build nix-shell
+      id: build_nix
+      run: |
+        nix-shell --run "tofu version"
+
+    - name: Import PGP key
+      id: import_pgp
+      run: |
+        echo -n "${{ secrets.sops_key }}" | gpg --import
+        gpg -K
 
     - name: Format
       id: fmt
-      run: tofu fmt -no-color -check -diff
+      run: |
+        nix-shell --run bash <<EOC
+        sops exec-env ${{ inputs.sops_env }} \
+          "tofu -chdir=${{ inputs.tf_dir }} fmt -no-color -check -diff"
+        EOC
 
     - name: Init
       id: init
-      run: tofu init -no-color -input=false
+      run: |
+        nix-shell --run bash <<EOC
+        sops exec-env ${{ inputs.sops_env }} \
+          "tofu -chdir=${{ inputs.tf_dir }} init -no-color -input=false"
+        EOC
 
     - name: Validate
       id: validate
-      run: tofu validate -no-color
+      run: |
+        nix-shell --run bash <<EOC
+        sops exec-env ${{ inputs.sops_env }} \
+          "tofu -chdir=${{ inputs.tf_dir }} validate -no-color"
+        EOC
 
     - name: Plan
       id: plan
-      run: tofu plan -no-color -input=false -compact-warnings -out tf_plan.out
-
-    - name: Post Setup
-      id: post_setup
-      # Only to avoid wrapper to mess up outputs in later steps
-      uses: opentofu/setup-opentofu@v1
-      with:
-        tofu_version: ${{ inputs.tf_version }}
-        tofu_wrapper: false
+      run: |
+        nix-shell --run bash <<EOC
+        sops exec-env ${{ inputs.sops_env }} \
+          "tofu -chdir=${{ inputs.tf_dir }} plan -no-color -input=false -compact-warnings -out tf_plan.out"
+        EOC
 
     - name: Verify
       id: verify
       run: |
         # Process the plan to verify the presence of some data
         # which can be used later to make additional checks
-        tofu show -no-color tf_plan.out > tf_plan.log 2> >(tee tf_plan.err >&2) && ret=0 || ret=$?
+        nix-shell --run bash <<EOC
+        sops exec-env ${{ inputs.sops_env }} \
+          "tofu -chdir=${{ inputs.tf_dir }} show -no-color tf_plan.out" > tf_plan.log 2> >(tee tf_plan.err >&2) && ret=0 || ret=$?
+        EOC
         # Export the plan in json too
-        tofu show -json tf_plan.out > tf_plan.json
+        nix-shell --run bash <<EOC
+        sops exec-env ${{ inputs.sops_env }} \
+          "tofu -chdir=${{ inputs.tf_dir }} show -json tf_plan.out" > tf_plan.json
         # Extract current state from the plan for later comparison
         unzip tf_plan.out tfstate
         # Extract data from temp files and export them as outputs for next steps
@@ -201,4 +208,8 @@ jobs:
     - name: Apply
       id: apply
       if: ${{ inputs.apply_on_branch != '' && github.ref == format('refs/heads/{0}', inputs.apply_on_branch) }}
-      run: tofu apply -no-color -input=false -auto-approve tf_plan.out
+      run: |
+        nix-shell --run bash <<EOC
+        sops exec-env ${{ inputs.sops_env }} \
+          "tofu -chdir=${{ inputs.tf_dir }} apply -no-color -input=false -auto-approve tf_plan.out"
+        EOC

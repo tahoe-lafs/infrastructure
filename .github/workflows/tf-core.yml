@@ -10,11 +10,15 @@ on:
     paths:
       - '.github/workflows/_tf.yml'
       - '.github/workflows/tf-core.yml'
+      - '.sops.yaml'
+      - 'secrets/tf-core.*'
       - 'tf/core/**'
   pull_request:
     paths:
       - '.github/workflows/_tf.yml'
       - '.github/workflows/tf-core.yml'
+      - '.sops.yaml'
+      - 'secrets/tf-core.*'
       - 'tf/core/**'
   workflow_dispatch:
 
@@ -26,9 +30,6 @@ jobs:
       tf_version: '1.9.0'
       tf_dir: tf/core
       apply_on_branch: 'main'
-      aws_default_region: 'eu-central-1'
+      sops_env: 'secrets/tf-core.env'
     secrets:
-      aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
-      hdns_token: ${{ secrets.HDNS_TOKEN }}
+      sops_key: ${{ secrets.PGP_SOPS_KEY }}

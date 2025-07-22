@@ -49,12 +49,18 @@
       # The devShells of this flake only support one system = "x86_64-linux"
       # FIXME: could it support more (flake-utils does not help!)?
       system = "x86_64-linux";
-      pkgs = import nixpkgs { inherit system; };
+      # The following devShell needs OpenToFu from NixOS 25.05
+      # TODO: switch to stable after the next upgrade
+      pkgs = import nixpkgs-unstable { inherit system; };
     in {
       devShells."${system}".default = pkgs.mkShell {
         packages = [
           pkgs.gnupg
           pkgs.sops
+          (pkgs.opentofu.withPlugins (plugins: [
+            plugins.hcloud
+            plugins.hetznerdns
+          ]))
         ];
         shellHook = ''
           # Print the version of some of the software used by this shell
