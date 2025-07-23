@@ -1,18 +1,18 @@
 # This file is maintained automatically by "tofu init".
 # Manual edits may be lost in future updates.
 
-provider "registry.opentofu.org/hetznercloud/hcloud" {
-  version     = "1.50.0"
-  constraints = "1.50.0"
+provider "registry.opentofu.org/germanbrew/hetznerdns" {
+  version     = "3.4.6"
+  constraints = "3.4.6"
   hashes = [
-    "h1:ot/df7gDNvLAuE2ggFlu21N1BsAC01mbVmwV81cAZYA=",
+    "h1:c14Vzvc66dN/8sH9w7rwwLklUMGRRjzVyZiqkY5TF1c=",
   ]
 }
 
-provider "registry.opentofu.org/timohirt/hetznerdns" {
-  version     = "2.2.0"
-  constraints = "2.2.0"
+provider "registry.opentofu.org/hetznercloud/hcloud" {
+  version     = "1.51.0"
+  constraints = "1.51.0"
   hashes = [
-    "h1:uhRAjLbIjPNlfqGuHFHunT6ftOBIALSd4FDETDK2E/o=",
+    "h1:oxbe0TYmLgYlYe88CPxjdyJ8PerSnbCepN7wn3PAULU=",
   ]
 }

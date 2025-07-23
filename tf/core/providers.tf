@@ -4,11 +4,11 @@ terraform {
   required_providers {
     hcloud = {
       source  = "hetznercloud/hcloud"
-      version = "= 1.50.0"
+      version = "= 1.51.0"
     }
     hetznerdns = {
-      source  = "timohirt/hetznerdns"
-      version = "2.2.0"
+      source  = "germanbrew/hetznerdns"
+      version = "3.4.6"
     }
   }
 }
@@ -18,7 +18,7 @@ provider "hcloud" {
 }
 
 provider "hetznerdns" {
-  apitoken = var.hdns_token
+  api_token = var.hdns_token
 }
 
 # Manage ssh authorized keys so Hetzner can use them to provision our resources (e.g.: new VPS)
