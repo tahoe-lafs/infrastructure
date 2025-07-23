@@ -62,38 +62,33 @@ jobs:
       id: import_pgp
       run: |
         echo -n "${{ secrets.sops_key }}" | gpg --import
-        gpg -K
 
     - name: Format
       id: fmt
       run: |
-        nix-shell --run bash <<EOC
-        sops exec-env ${{ inputs.sops_env }} \
-          "tofu -chdir=${{ inputs.tf_dir }} fmt -no-color -check -diff"
+        nix-shell --run "sops exec-env ${{ inputs.sops_env }} bash" <<EOC
+          tofu -chdir="${{ inputs.tf_dir }}" fmt -no-color -check -diff
         EOC
 
     - name: Init
       id: init
       run: |
-        nix-shell --run bash <<EOC
-        sops exec-env ${{ inputs.sops_env }} \
-          "tofu -chdir=${{ inputs.tf_dir }} init -no-color -input=false"
+        nix-shell --run "sops exec-env ${{ inputs.sops_env }} bash" <<EOC
+          tofu -chdir="${{ inputs.tf_dir }}" init -no-color -input=false
         EOC
 
     - name: Validate
       id: validate
       run: |
-        nix-shell --run bash <<EOC
-        sops exec-env ${{ inputs.sops_env }} \
-          "tofu -chdir=${{ inputs.tf_dir }} validate -no-color"
+        nix-shell --run "sops exec-env ${{ inputs.sops_env }} bash" <<EOC
+          tofu -chdir="${{ inputs.tf_dir }}" validate -no-color
         EOC
 
     - name: Plan
       id: plan
       run: |
-        nix-shell --run bash <<EOC
-        sops exec-env ${{ inputs.sops_env }} \
-          "tofu -chdir=${{ inputs.tf_dir }} plan -no-color -input=false -compact-warnings -out tf_plan.out"
+        nix-shell --run "sops exec-env ${{ inputs.sops_env }} bash" <<EOC
+          tofu -chdir="${{ inputs.tf_dir }}" plan -no-color -input=false -compact-warnings -out tf_plan.out
         EOC
 
     - name: Verify
@@ -101,16 +96,15 @@ jobs:
       run: |
         # Process the plan to verify the presence of some data
         # which can be used later to make additional checks
-        nix-shell --run bash <<EOC
-        sops exec-env ${{ inputs.sops_env }} \
-          "tofu -chdir=${{ inputs.tf_dir }} show -no-color tf_plan.out" > tf_plan.log 2> >(tee tf_plan.err >&2) && ret=0 || ret=$?
+        nix-shell --run "bash" <<EOC
+          tofu -chdir="${{ inputs.tf_dir }}" show -no-color tf_plan.out > tf_plan.log 2> >(tee tf_plan.err >&2) && ret=0 || ret=$?
         EOC
         # Export the plan in json too
-        nix-shell --run bash <<EOC
-        sops exec-env ${{ inputs.sops_env }} \
-          "tofu -chdir=${{ inputs.tf_dir }} show -json tf_plan.out" > tf_plan.json
+        nix-shell --run "bash" <<EOC
+          tofu -chdir="${{ inputs.tf_dir }}" show -json tf_plan.out > "${{ inputs.tf_dir }}/tf_plan.json"
+        EOC
         # Extract current state from the plan for later comparison
-        unzip tf_plan.out tfstate
+        unzip "${{ inputs.tf_dir }}/tf_plan.out" tfstate
         # Extract data from temp files and export them as outputs for next steps
         # - changes made, if any
         echo "changes<<tf_verify_changes" >> $GITHUB_OUTPUT
@@ -204,7 +198,6 @@ jobs:
       id: apply
       if: ${{ inputs.apply_on_branch != '' && github.ref == format('refs/heads/{0}', inputs.apply_on_branch) }}
       run: |
-        nix-shell --run bash <<EOC
-        sops exec-env ${{ inputs.sops_env }} \
-          "tofu -chdir=${{ inputs.tf_dir }} apply -no-color -input=false -auto-approve tf_plan.out"
+        nix-shell --run "sops exec-env ${{ inputs.sops_env }} bash" <<EOC
+          tofu -chdir=${{ inputs.tf_dir }} apply -no-color -input=false -auto-approve "tf_plan.out"
         EOC
