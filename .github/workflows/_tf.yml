@@ -3,11 +3,6 @@
 on:
   workflow_call:
     inputs:
-      tf_version:
-        description: 'Version of OpenToFu runtime to use'
-        required: false
-        type: string
-        default: '1.9.0'
       tf_dir:
         description: 'Path to the OpenToFu plan to use'
         required: false

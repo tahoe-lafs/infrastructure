@@ -27,7 +27,6 @@ jobs:
     # Call the re-usable ToFu workflow
     uses: ./.github/workflows/_tf.yml
     with:
-      tf_version: '1.9.0'
       tf_dir: tf/core
       apply_on_branch: 'main'
       sops_env: 'secrets/tf-core.env'
