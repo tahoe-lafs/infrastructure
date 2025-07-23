@@ -126,9 +126,8 @@ Most failures should be detailed with the relevant error messages also published
 It is also be possible to reproduce the environment used by the GHA using this combination of commands:
 
 ```
-nix-shell --run bash <<EOC
-sops exec-env secrets/tf-core.env \
-  "tofu -chdir=tf/core plan"
+nix-shell --run "sops exec-env secrets/tf-core.env bash" <<EOC
+  tofu -chdir=tf/core plan
 EOC
 ```
 
