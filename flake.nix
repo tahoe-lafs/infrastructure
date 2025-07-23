@@ -49,12 +49,40 @@
       # The devShells of this flake only support one system = "x86_64-linux"
       # FIXME: could it support more (flake-utils does not help!)?
       system = "x86_64-linux";
-      pkgs = import nixpkgs { inherit system; };
+      # Unfortunately, the hetznerdns provider is no longer maintain
+      # We need an overlay to use the more recent fork,
+      # until we get a better version from upstream (issue w/ TXT records)
+      tofuOverlay = final: prev: {
+        terraform-providers = prev.terraform-providers // {
+          hetznerdns = prev.terraform-providers.hetznerdns.overrideAttrs (old: rec {
+            name = "terraform-provider-hetznerdns-${version}";
+            version = "3.4.6";
+            src = prev.fetchFromGitHub {
+              owner = "germanbrew";
+              repo = "terraform-provider-hetznerdns";
+              rev = "v${version}";
+              sha256 = "40u9K19nVZadMWj0azKrx99gMSKk83CXzjM/HGZCr/w=";
+            };
+            owner = "${src.owner}";
+            homepage = "https://registry.terraform.io/providers/${src.owner}/hetznerdns";
+            provider-source-address = "registry.terraform.io/${src.owner}/hetznerdns";
+            postInstall = "dir=$out/libexec/terraform-providers/registry.terraform.io/${src.owner}/hetznerdns/${version}/\${GOOS}_\${GOARCH}\nmkdir -p \"$dir\"\nmv $out/bin/* \"$dir/terraform-provider-$(basename registry.terraform.io/${src.owner}/hetznerdns)_${version}\"\nrmdir $out/bin\n";
+            vendorHash = "sha256-9ufpWt+yLIvjjRuuUxzk1UM7CaYEKCeORdjO9P45moc=";
+          });
+        };
+      };
+      # The following devShell needs OpenToFu from NixOS 25.05
+      # TODO: switch to stable after the next upgrade
+      pkgs = import nixpkgs-unstable { inherit system; overlays = [ tofuOverlay ]; };
     in {
       devShells."${system}".default = pkgs.mkShell {
         packages = [
           pkgs.gnupg
           pkgs.sops
+          (pkgs.opentofu.withPlugins (plugins: [
+            plugins.hcloud
+            plugins.hetznerdns
+          ]))
         ];
         shellHook = ''
           # Print the version of some of the software used by this shell

@@ -6,15 +6,17 @@ keys:
   # The following public keys can be found in secrets/.public-keys
   # They have to be imported and trusted
   # E.g.: `gpg --import ...` and `gpg --edit-key ...`
-  # First the GPG fingerprints of the admin (hardware token recommanded)
+  # First the PGP fingerprints of the admin (hardware token recommanded)
   - &adm_btlogy 411eb16d13b422490feba1155a7a09f0c279fcd6
   - &adm_hacklschorsch 5244970fbec8aa66658ec4b6d7d4a441431a73f1
   - &adm_last-resort-a eaf916fd9ccda8288b9c5e3a7cc75588b18b3e9b
   - &adm_last-resort-c a229968d0fa44960493ea207619b4427113ef6c8
-  # Then the GPG fingerprints derivated of the sshd RSA key of the servers
+  # Then the PGP fingerprints derivated of the sshd RSA key of the servers
   # which can be obtain by running the following command on the server
   # nix-shell -p ssh-to-pgp --run "ssh-to-pgp -i /etc/ssh/ssh_host_rsa_key"
   - &srv_webforge 122ace3a40ab7fc47e5659c29c159e5083d0ed64
+  # Finally, the PGP fingerprints from dedicated keys (not uses by sshd)
+  - &srv_github-actions 55f09f5ce40c076f4371a3075f108c36a6e78793
 creation_rules:
   # The following files can be created with:
   # `nix-shell -p sops --run "sops <file>"`
@@ -28,6 +30,14 @@ creation_rules:
       - *adm_last-resort-a
       - *adm_last-resort-c
       - *srv_webforge
+  - path_regex: secrets/tf-core\.(yaml|json|env|ini)$
+    key_groups:
+    - pgp:
+      - *adm_btlogy
+      - *adm_hacklschorsch
+      - *adm_last-resort-a
+      - *adm_last-resort-c
+      - *srv_github-actions
   - path_regex: secrets/webforge\.(yaml|json|env|ini)$
     key_groups:
     - pgp:

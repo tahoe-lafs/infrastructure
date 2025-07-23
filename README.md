@@ -85,10 +85,14 @@ This section describes how the resources defined in this repository should be de
 
 ### Infrastructure Provisioning
 
+The infrastructure is deployed using OpenToFu and the following steps should be covered by the plan (e.g. `tf/core/`)"
+
 1. Ensure the relevant ssh public keys are defined in the relevant Hetzner project (e.g.: Tahoe-LAFS)
 2. Create a new Debian VPS referring to at least one ssh key in the same project
 3. Infect the VPS with NixOS (e.g.: using `cloud-init`)
 4. Publish the new A/AAAA/PTR/CNAME DNS records the related zone (e.g.: `tahoe-lafs.org` hosted by Gandi)
+
+Any PR changing the plan should trigger a GHA workflow: see [Continuous Deployment](#continuous-deployment).
 
 ### Software Provisioning
 
@@ -118,6 +122,14 @@ Assuming OpenToFu is used, any changes to the existing plan should be automatica
 described in a comment added on the pull request.
 
 Most failures should be detailed with the relevant error messages also published in this comment.
+
+It is also be possible to reproduce the environment used by the GHA using this combination of commands:
+
+```
+nix-shell --run "sops exec-env secrets/tf-core.env bash" <<EOC
+  tofu -chdir=tf/core plan
+EOC
+```
 
 ### Software Deployment
 
