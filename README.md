@@ -127,6 +127,7 @@ It is also be possible to reproduce the environment used by the GHA using this c
 
 ```
 nix-shell --run "sops exec-env secrets/tf-core.env bash" <<EOC
+  tofu -chdir=tf/core init
   tofu -chdir=tf/core plan
 EOC
 ```

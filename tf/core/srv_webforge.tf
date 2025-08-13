@@ -1,5 +1,5 @@
 # System name: webforge
-# Main FQDN: webforge.tahoe-lafs.org
+# Main FQDN: webforge.of.tahoe-lafs.org
 # Provider: Hetzner
 # OS: NixOS
 # Description: Web-based collaborative version control server for Tahoe-LAFS

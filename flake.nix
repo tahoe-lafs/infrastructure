@@ -71,8 +71,8 @@
           });
         };
       };
-      # The following devShell needs OpenToFu from NixOS 25.05
-      # TODO: switch to stable after the next upgrade
+      # The following devShell needs OpenToFu and/or SOPS from unstable!
+      # TODO: switch back to stable after the next upgrade
       pkgs = import nixpkgs-unstable { inherit system; overlays = [ tofuOverlay ]; };
     in {
       devShells."${system}".default = pkgs.mkShell {
