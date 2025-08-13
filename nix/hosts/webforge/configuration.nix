@@ -7,6 +7,7 @@
     ./backup.nix
     ./web-landing-page.nix
     ./forgejo.nix
+    ./forgejo-runner.nix
     ./mailserver.nix
     ./postgresql.nix
   ];
