@@ -6,7 +6,8 @@ set -o errexit  # exit on failed command
 set -o nounset  # exit on undeclared variables
 set -o pipefail # exit on any failed command in pipes
 
-# Stop services before backup
+# Start services after backup
 systemctl start \
 	  postfix.service \
 	  forgejo.service \
+	  borgbackup-job-rsnapshot.service
