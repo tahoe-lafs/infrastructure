@@ -56,4 +56,7 @@
     pkgs.unstable.ssh-to-pgp
     vim
   ];
+
+  # Silent cron email - connection is refused anyway
+  services.cron.mailto = "";
 }
