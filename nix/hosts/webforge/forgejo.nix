@@ -66,7 +66,7 @@
         ROOT_URL = "https://forge.of.tahoe-lafs.org/";
       };
       service = {
-        DISABLE_REGISTER = true;         # only admin can register until the migration is completed
+        DISABLE_REGISTRATION = true;     # only admin can register until the migration is completed
         # REGISTER_EMAIL_CONFIRM = true; # when not registering via oauth2
         # ENABLE_CAPTCHA = true;         # to reduce spam registration
         # CAPTCHA_TYPE = "image";
