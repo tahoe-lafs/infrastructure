@@ -2,19 +2,19 @@ terraform {
   required_version = "~> 1.4"
 
   required_providers {
+    desec = {
+      source  = "valodim/desec"
+      version = "0.6.1"
+    }
     hcloud = {
       source  = "hetznercloud/hcloud"
       version = "= 1.51.0"
     }
-    hetznerdns = {
-      source  = "germanbrew/hetznerdns"
-      version = "3.4.6"
-    }
   }
 }
 
-provider "hcloud" {
-  token = var.hcloud_token
+provider "desec" {
+  api_token = var.desec_token
 }
 
 provider "hetznerdns" {
