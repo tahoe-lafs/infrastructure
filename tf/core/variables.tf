@@ -3,8 +3,8 @@ variable "hcloud_token" {
   type      = string
   sensitive = true
 }
-# The API token to interact with Hetzner DNS
-variable "hdns_token" {
+# The API token to interact with deSec DNS
+variable "desec_token" {
   type      = string
   sensitive = true
 }
