@@ -35,6 +35,9 @@
         ENABLED = true;
         DEFAULT_ACTIONS_URL = "https://data.forgejo.org";
       };
+      admin = {
+        DISABLE_REGULAR_ORG_CREATION = true;
+      };
       api = {
         MAX_RESPONSE_ITEMS = 250;
       };
@@ -66,10 +69,12 @@
         ROOT_URL = "https://forge.of.tahoe-lafs.org/";
       };
       service = {
-        DISABLE_REGISTRATION = true;     # only admin can register until the migration is completed
-        # REGISTER_EMAIL_CONFIRM = true; # when not registering via oauth2
-        # ENABLE_CAPTCHA = true;         # to reduce spam registration
-        # CAPTCHA_TYPE = "image";
+        ENABLE_NOTIFY_MAIL = true;        # to send e-mail to watchers
+        DISABLE_REGISTRATION = true;      # only admin can register until the migration is completed
+        REGISTER_EMAIL_CONFIRM = true;    # when not registering via oauth2
+        REGISTER_MANUAL_CONFIRM = true; # if we want admins to moderate
+        ENABLE_CAPTCHA = true;          # to reduce spam registration
+        CAPTCHA_TYPE = "image";
       };
     };
   };
