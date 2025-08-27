@@ -110,6 +110,12 @@
           done < <(grep -vP '(^\s*#)' .sops.yaml | grep -Po '(?<=\&)[^\s]+ [0-9a-fA-F]{40}')
         '';
       };
+      # We need a list of customized attrset to build and deploy each nixosConfiguration
+      lib.nixosConfigurationsMatrix = builtins.map (sysname: {
+        target = sysname;
+        hostname = self.outputs.nixosConfigurations.${sysname}.config.networking.hostName;
+        domain = self.outputs.nixosConfigurations.${sysname}.config.networking.domain;
+      }) (builtins.attrNames self.outputs.nixosConfigurations);
       nixosConfigurations =
         # Merge the nixosConfigurations generated for each of our nixpkgs
         mkSystemConfigurations nixpkgs [
