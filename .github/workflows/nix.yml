@@ -40,17 +40,15 @@ jobs:
       - name: Set matrix
         id: set-matrix
         run: |
-          # Create a "matrix" targeting the systems we want to check (and later deploy).
-          # It will be consumed by the next job(s) to fire one build per system in parallel.
+          # Extract some data about the systems in the flake, so we can build/deploy them in parallel using the matrix strategy
           # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/running-variations-of-jobs-in-a-workflow
-          echo "matrix<<end_of_matrix" >> $GITHUB_OUTPUT
-          cat >> $GITHUB_OUTPUT <<-EOF
-          {"include":[
-          {"target":"webforge","hostname":"webforge","domain":"tahoe-lafs.org"}
-          ]}
-          EOF
-          echo "end_of_matrix" >> $GITHUB_OUTPUT
-          # TODO: Find a simpe way to get the target list from the flake
+          # Get the json list of the nixosConfigurations using our custom lib from the flake
+          output="matrix={\"include\":$(nix eval --json .#lib.nixosConfigurationsMatrix)}"
+          # Print it for troubleshooting. It should look like:
+          # `matrix={"include":[{"target":"<sys1>","hostname":"<host1>","domain":"<domain1>"}, ...]}`
+          echo $output
+          # Save it for the next job(s)
+          echo $output >> $GITHUB_OUTPUT
 
   build:
     name: Build
@@ -102,6 +100,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix: ${{fromJson(needs.check.outputs.matrix)}}
+    concurrency:
+      group: nix-deploy-${{ matrix.target }}
     steps:
       - name: Checkout
         id: checkout
