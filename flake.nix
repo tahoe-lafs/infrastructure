@@ -1,13 +1,13 @@
 {
   inputs = {
     # The nixpkgs channels we want to consume
-    nixpkgs-24_05.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-24_11.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs-25_05.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # Some links to the above channels for consistent naming in outputs
-    nixpkgs-oldstable.follows = "nixpkgs-24_05";
-    nixpkgs.follows = "nixpkgs-24_11";
+    nixpkgs-oldstable.follows = "nixpkgs-24_11";
+    nixpkgs.follows = "nixpkgs-25_05";
 
     # Extra inputs for modules leaving outside nixpkgs
     flake-compat = {
@@ -19,10 +19,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     simple-nixos-mailserver = {
-      url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-24.11";
+      url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-25.05";
       # Flip those when the last systems can start using this module
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.nixpkgs-24_11.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs.nixpkgs-25_05.follows = "nixpkgs";
+      inputs.flake-compat.follows = "flake-compat";
     };
   };
   outputs = { self, nixpkgs, nixpkgs-oldstable, nixpkgs-unstable, ... }@attrs:
@@ -71,9 +72,8 @@
           });
         };
       };
-      # The following devShell needs OpenToFu from NixOS 25.05
-      # TODO: switch to stable after the next upgrade
-      pkgs = import nixpkgs-unstable { inherit system; overlays = [ tofuOverlay ]; };
+      # The following devShell needs OpenToFu from NixOS >=25.05
+      pkgs = import nixpkgs { inherit system; overlays = [ tofuOverlay ]; };
     in {
       devShells."${system}".default = pkgs.mkShell {
         packages = [
