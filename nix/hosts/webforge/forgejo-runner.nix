@@ -21,8 +21,7 @@
   };
   services.gitea-actions-runner = {
     # Use the forgejo fork
-    # TODO switch from unstable to stable with 25.05
-    package = pkgs.unstable.forgejo-runner;
+    package = pkgs.forgejo-runner;
     instances = {
       # A local runner which should be carefully registered at org. level,
       # so only users with write/push permissions on org. repos can mess with it

@@ -50,10 +50,7 @@
   boot.loader.grub.configurationLimit = 3;
 
   environment.systemPackages = with pkgs; [
-    # FIXME: ssh-to-gpg is broken in 1.1.3 and 1.1.4 in NixOS 24.11
-    # https://github.com/Mic92/ssh-to-pgp/issues/73
-    # But we can have the fix in >= 1.1.5 from unstable until NixOS 25.05
-    pkgs.unstable.ssh-to-pgp
+    ssh-to-pgp
     vim
   ];
 
