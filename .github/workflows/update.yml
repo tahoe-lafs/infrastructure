@@ -1,0 +1,33 @@
+name: Update
+on:
+  schedule:
+    - cron: "27 4 * * 1"
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/update.yml'
+  pull_request:
+    paths:
+      - '.github/workflows/update.yml'
+
+jobs:
+  nix:
+    name: Nix
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Install Nix
+        id: install_nix
+        uses: nixbuild/nix-quick-install-action@2c9db80fb984ceb1bcaa77cdda3fdf8cfba92035 # v34
+
+      - name: Checkout
+        id: checkout
+        uses: LeastAuthority/checkout-nix-flake@90a34024508812fd64b012de7c97ff977e32bd46 # v1.0.1
+
+      - name: Update Nix Flake
+        id: update_nix_flake
+        uses: LeastAuthority/update-nix-flake@6cc50371ca6ca779c40cf7520c1102744d098b9e # v1.0.4
+        with:
+          branch: "update/nix-flake"
+          token: ${{ secrets.GH_PAT_UPDATE }}
