@@ -23,13 +23,13 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - name: Checkout
-        id: checkout
-        uses: actions/checkout@v4
-
       - name: Install Nix
         id: install_nix
-        uses: nixbuild/nix-quick-install-action@v30
+        uses: nixbuild/nix-quick-install-action@2c9db80fb984ceb1bcaa77cdda3fdf8cfba92035 # v34
+
+      - name: Checkout
+        id: checkout
+        uses: LeastAuthority/checkout-nix-flake@90a34024508812fd64b012de7c97ff977e32bd46 # v1.0.1
 
       - name: Check Nix Flake
         id: check
@@ -60,13 +60,13 @@ jobs:
       # Consuming the matrix created above
       matrix: ${{fromJson(needs.check.outputs.matrix)}}
     steps:
-      - name: Checkout
-        id: checkout
-        uses: actions/checkout@v4
-
       - name: Install Nix
         id: install_nix
-        uses: nixbuild/nix-quick-install-action@v30
+        uses: nixbuild/nix-quick-install-action@2c9db80fb984ceb1bcaa77cdda3fdf8cfba92035 # v34
+
+      - name: Checkout
+        id: checkout
+        uses: LeastAuthority/checkout-nix-flake@90a34024508812fd64b012de7c97ff977e32bd46 # v1.0.1
 
       - name: Restore and cache Nix store ${{ matrix.target }}
         uses: nix-community/cache-nix-action@v6
@@ -105,11 +105,11 @@ jobs:
     steps:
       - name: Checkout
         id: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Load ssh key in agent
         id: ssh_agent
-        uses: LeastAuthority/ssh-agent-action@v1
+        uses: LeastAuthority/ssh-agent-action@0dd06f345a84b49e021b9e254efe3a1faa95cc98 # v1.0.2
         with:
           private_key: ${{ secrets.BOT_CD_SSH_KEY }}
 
