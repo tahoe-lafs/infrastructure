@@ -6,13 +6,17 @@ on:
       - main
     paths:
       - '.github/workflows/nix.yml'
+      - '.sops.yaml'
       - 'nix/**'
+      - '*.nix'
       - 'flake.*'
       - 'secrets/**'
   pull_request:
     paths:
       - '.github/workflows/nix.yml'
+      - '.sops.yaml'
       - 'nix/**'
+      - '*.nix'
       - 'flake.*'
       - 'secrets/**'
 

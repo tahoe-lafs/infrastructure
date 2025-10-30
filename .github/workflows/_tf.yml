@@ -1,10 +1,10 @@
-# Re-usable workflow to continuously integrate and deploy OpenToFu plan
+# Re-usable workflow to continuously integrate and deploy TF plan
 
 on:
   workflow_call:
     inputs:
       tf_dir:
-        description: 'Path to the OpenToFu plan to use'
+        description: 'Directory where the plan lives'
         required: false
         type: string
         default: './'
@@ -34,15 +34,13 @@ on:
 
 jobs:
   tf:
-    name: OpenToFu
+    name: TF
     runs-on: ${{ inputs.gh_runner_version }}
+    env:
+      NIX_PATH: nixpkgs=flake:nixpkgs
     permissions:
       pull-requests: write
       contents: read
-    env:
-      # To silent an error when calling nix-shell
-      # FIXME: try to use only the flake?
-      NIX_PATH: nixpkgs=channel:nixos-unstable
 
     steps:
     - name: Checkout
@@ -98,9 +96,7 @@ jobs:
         # which can be used later to make additional checks
         nix-shell --run "bash" <<EOC
           tofu -chdir="${{ inputs.tf_dir }}" show -no-color tf_plan.out > tf_plan.log 2> >(tee tf_plan.err >&2) && ret=0 || ret=$?
-        EOC
-        # Export the plan in json too
-        nix-shell --run "bash" <<EOC
+          # Export the plan in json too
           tofu -chdir="${{ inputs.tf_dir }}" show -json tf_plan.out > "${{ inputs.tf_dir }}/tf_plan.json"
         EOC
         # Extract current state from the plan for later comparison
