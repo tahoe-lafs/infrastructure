@@ -30,6 +30,24 @@
         "url": "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz"
       }
     },
+    "flake-utils": {
+      "inputs": {
+        "systems": "systems"
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "git-hooks": {
       "inputs": {
         "flake-compat": [
@@ -139,7 +157,8 @@
         ],
         "nixpkgs-unstable": "nixpkgs-unstable",
         "simple-nixos-mailserver": "simple-nixos-mailserver",
-        "sops-nix": "sops-nix"
+        "sops-nix": "sops-nix",
+        "tahoe-lafs": "tahoe-lafs"
       }
     },
     "simple-nixos-mailserver": {
@@ -188,6 +207,49 @@
       "original": {
         "owner": "Mic92",
         "repo": "sops-nix",
+        "type": "github"
+      }
+    },
+    "systems": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "tahoe-lafs": {
+      "inputs": {
+        "flake-compat": [
+          "flake-compat"
+        ],
+        "flake-utils": "flake-utils",
+        "nixpkgs": [
+          "tahoe-lafs",
+          "nixpkgs-24_11"
+        ],
+        "nixpkgs-24_11": [
+          "nixpkgs-24_11"
+        ]
+      },
+      "locked": {
+        "lastModified": 1756402594,
+        "narHash": "sha256-wK4HZgOJP+rQdSOCpDDJEVPq40bjy6iV08DKQmcMiv4=",
+        "owner": "tahoe-lafs",
+        "repo": "tahoe-lafs",
+        "rev": "a080b75b85ae3d4b6eabaf9790f1b3d7f02a7521",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tahoe-lafs",
+        "repo": "tahoe-lafs",
         "type": "github"
       }
     }

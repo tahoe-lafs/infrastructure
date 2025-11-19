@@ -25,6 +25,11 @@
       inputs.nixpkgs-25_05.follows = "nixpkgs";
       inputs.flake-compat.follows = "flake-compat";
     };
+    tahoe-lafs = {
+      url = "github:tahoe-lafs/tahoe-lafs";
+      inputs.flake-compat.follows = "flake-compat";
+      inputs.nixpkgs-24_11.follows = "nixpkgs-24_11";
+    };
   };
   outputs = { self, nixpkgs, nixpkgs-oldstable, nixpkgs-unstable, ... }@attrs:
     let
@@ -119,13 +124,14 @@
       nixosConfigurations =
         # Merge the nixosConfigurations generated for each of our nixpkgs
         mkSystemConfigurations nixpkgs [
+          "testgrid"
           "webforge"
         ] //
         mkSystemConfigurations nixpkgs-oldstable [
-          # empty for now: use for smooth upgrade
+          # to delay the upgrade of specifc hosts if needed
         ] //
         mkSystemConfigurations nixpkgs-unstable [
-          # maybe "testgrid" soon
+          # to test something not ready for prod
         ];
       };
 }
