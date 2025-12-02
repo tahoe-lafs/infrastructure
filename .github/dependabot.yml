@@ -1,0 +1,9 @@
+---
+version: 2
+updates:
+  # Keep Github Actions up to date
+  - package-ecosystem: "github-actions"
+    directory: "/.github/workflows"
+    schedule:
+      interval: "daily"
+      time: "12:30"

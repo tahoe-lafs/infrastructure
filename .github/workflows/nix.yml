@@ -6,13 +6,17 @@ on:
       - main
     paths:
       - '.github/workflows/nix.yml'
+      - '.sops.yaml'
       - 'nix/**'
+      - '*.nix'
       - 'flake.*'
       - 'secrets/**'
   pull_request:
     paths:
       - '.github/workflows/nix.yml'
+      - '.sops.yaml'
       - 'nix/**'
+      - '*.nix'
       - 'flake.*'
       - 'secrets/**'
 
@@ -23,13 +27,13 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - name: Checkout
-        id: checkout
-        uses: actions/checkout@v4
-
       - name: Install Nix
         id: install_nix
-        uses: nixbuild/nix-quick-install-action@v30
+        uses: nixbuild/nix-quick-install-action@2c9db80fb984ceb1bcaa77cdda3fdf8cfba92035 # v34
+
+      - name: Checkout
+        id: checkout
+        uses: LeastAuthority/checkout-nix-flake@90a34024508812fd64b012de7c97ff977e32bd46 # v1.0.1
 
       - name: Check Nix Flake
         id: check
@@ -60,32 +64,13 @@ jobs:
       # Consuming the matrix created above
       matrix: ${{fromJson(needs.check.outputs.matrix)}}
     steps:
-      - name: Checkout
-        id: checkout
-        uses: actions/checkout@v4
-
       - name: Install Nix
         id: install_nix
-        uses: nixbuild/nix-quick-install-action@v30
+        uses: nixbuild/nix-quick-install-action@2c9db80fb984ceb1bcaa77cdda3fdf8cfba92035 # v34
 
-      - name: Restore and cache Nix store ${{ matrix.target }}
-        uses: nix-community/cache-nix-action@v6
-        with:
-          # restore and save a cache using this key
-          primary-key: ${{ runner.os }}-Nix-${{ matrix.target }}-${{ hashFiles('flake.*', 'nix/common/*.nix', 'nix/modules/**.nix', format('nix/hosts/{0}/*.nix', matrix.target)) }}
-          # if there's no cache hit, restore a cache by this prefix
-          restore-prefixes-first-match: ${{ runner.os }}-Nix-${{ matrix.target }}-
-          # collect garbage until Nix store size (in bytes) is at most this number
-          # before trying to save a new cache
-          gc-max-store-size-linux: 1073741824
-          # do purge caches
-          purge: true
-          # purge all versions of the cache
-          purge-prefixes: ${{ runner.os }}-Nix-${{ matrix.target }}-
-          # created more than 0 seconds ago relative to the start of the `Post Restore` phase
-          purge-created: 0
-          # except the version with the `primary-key`, if it exists
-          purge-primary-key: never
+      - name: Checkout
+        id: checkout
+        uses: LeastAuthority/checkout-nix-flake@90a34024508812fd64b012de7c97ff977e32bd46 # v1.0.1
 
       - name: Build nixosConfiguration for ${{ matrix.target }}
         id: check_target
@@ -105,11 +90,11 @@ jobs:
     steps:
       - name: Checkout
         id: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Load ssh key in agent
         id: ssh_agent
-        uses: LeastAuthority/ssh-agent-action@v1
+        uses: LeastAuthority/ssh-agent-action@0dd06f345a84b49e021b9e254efe3a1faa95cc98 # v1.0.2
         with:
           private_key: ${{ secrets.BOT_CD_SSH_KEY }}
 
