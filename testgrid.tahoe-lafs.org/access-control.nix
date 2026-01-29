@@ -14,7 +14,8 @@
     #
     # A good change would be to create actual user accounts with sudo
     # configuration instead, probably.
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHx7wJQNqKn8jOC4AxySRL2UxidNp7uIK9ad3pMb1ifF flo@vantaa"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIZtWY7t8HVnaz6bluYsrAlzZC3MZtb8g0nO5L5fCQKR benoit@leastauthority.com"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE1hy9mPkJI+7mY2Uq6CLpuFMMLOTfiY2sRJHwpihgRt cardno:26 269 859 - Last Resort A-Key"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJPYMUVNuWr2y+FL1GxW6S6jb3BWYhbzJ2zhvQVKu2ll cardno:23 845 763 - Last Resort C-key"
   ];
 }
