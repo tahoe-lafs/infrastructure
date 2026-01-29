@@ -1,5 +1,5 @@
 # Define a NixOS module that sets up the Tahoe-LAFS test grid.
-{ config, pkgs, ... }:
+{ config, tahoe-lafs, ... }:
 let
   # Choose the tahoe-lafs package to run:
   #
@@ -9,7 +9,7 @@ let
   #   package = pkgs.tahoe-lafs;
   # The upstream flake:
   package =
-    (builtins.getFlake "github:tahoe-lafs/tahoe-lafs?ref=master").packages.x86_64-linux.default;
+    tahoe-lafs.packages.x86_64-linux.default;
 in
 {
   # Configure Tahoe to run here.

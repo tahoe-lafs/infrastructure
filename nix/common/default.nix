@@ -50,10 +50,13 @@
   boot.loader.grub.configurationLimit = 3;
 
   environment.systemPackages = with pkgs; [
+    gitMinimal
     ssh-to-pgp
     vim
   ];
 
   # Silent cron email - connection is refused anyway
   services.cron.mailto = "";
+
+  nix.extraOptions = "experimental-features = nix-command flakes";
 }
