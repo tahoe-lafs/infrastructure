@@ -9,7 +9,7 @@
     nixpkgs-oldstable.follows = "nixpkgs-24_11";
     nixpkgs.follows = "nixpkgs-25_05";
 
-    # Extra inputs for modules leaving outside nixpkgs
+    # Extra inputs for software living outside nixpkgs
     flake-compat = {
       url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
     };
@@ -50,30 +50,7 @@
       # The devShells of this flake only support one system = "x86_64-linux"
       # FIXME: could it support more (flake-utils does not help!)?
       system = "x86_64-linux";
-      # Unfortunately, the hetznerdns provider is no longer maintain
-      # We need an overlay to use the more recent fork,
-      # until we get a better version from upstream (issue w/ TXT records)
-      tofuOverlay = final: prev: {
-        terraform-providers = prev.terraform-providers // {
-          hetznerdns = prev.terraform-providers.hetznerdns.overrideAttrs (old: rec {
-            name = "terraform-provider-hetznerdns-${version}";
-            version = "3.4.6";
-            src = prev.fetchFromGitHub {
-              owner = "germanbrew";
-              repo = "terraform-provider-hetznerdns";
-              rev = "v${version}";
-              sha256 = "40u9K19nVZadMWj0azKrx99gMSKk83CXzjM/HGZCr/w=";
-            };
-            owner = "${src.owner}";
-            homepage = "https://registry.terraform.io/providers/${src.owner}/hetznerdns";
-            provider-source-address = "registry.terraform.io/${src.owner}/hetznerdns";
-            postInstall = "dir=$out/libexec/terraform-providers/registry.terraform.io/${src.owner}/hetznerdns/${version}/\${GOOS}_\${GOARCH}\nmkdir -p \"$dir\"\nmv $out/bin/* \"$dir/terraform-provider-$(basename registry.terraform.io/${src.owner}/hetznerdns)_${version}\"\nrmdir $out/bin\n";
-            vendorHash = "sha256-9ufpWt+yLIvjjRuuUxzk1UM7CaYEKCeORdjO9P45moc=";
-          });
-        };
-      };
-      # The following devShell needs OpenToFu from NixOS >=25.05
-      pkgs = import nixpkgs { inherit system; overlays = [ tofuOverlay ]; };
+      pkgs = import nixpkgs { inherit system; overlays = [ ]; };
     in {
       devShells."${system}".default = pkgs.mkShell {
         packages = [
@@ -81,7 +58,6 @@
           pkgs.sops
           (pkgs.opentofu.withPlugins (plugins: [
             plugins.hcloud
-            plugins.hetznerdns
           ]))
         ];
         shellHook = ''
