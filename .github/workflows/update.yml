@@ -23,7 +23,7 @@ jobs:
 
       - name: Checkout
         id: checkout
-        uses: LeastAuthority/checkout-nix-flake@90a34024508812fd64b012de7c97ff977e32bd46 # v1.0.1
+        uses: LeastAuthority/checkout-nix-flake@0a440df193fd6d532fcd49e12d493fe591626ec0 # v1.0.3
 
       - name: Update Nix Flake
         id: update_nix_flake
