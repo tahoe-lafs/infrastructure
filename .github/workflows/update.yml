@@ -27,7 +27,7 @@ jobs:
 
       - name: Update Nix Flake
         id: update_nix_flake
-        uses: LeastAuthority/update-nix-flake@6cc50371ca6ca779c40cf7520c1102744d098b9e # v1.0.4
+        uses: LeastAuthority/update-nix-flake@e08c38863c30ed2c783ac3f7e5939b7c6a19af94 # v1.0.6
         with:
           branch: "update/nix-flake"
           token: ${{ secrets.GH_PAT_UPDATE }}
