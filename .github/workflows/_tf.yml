@@ -94,7 +94,7 @@ jobs:
       run: |
         # Process the plan to verify the presence of some data
         # which can be used later to make additional checks
-        nix-shell --run "bash" <<EOC
+        nix-shell --run "sops exec-env ${{ inputs.sops_env }} bash" <<EOC
           tofu -chdir="${{ inputs.tf_dir }}" show -no-color tf_plan.out > tf_plan.log 2> >(tee tf_plan.err >&2) && ret=0 || ret=$?
           # Export the plan in json too
           tofu -chdir="${{ inputs.tf_dir }}" show -json tf_plan.out > "${{ inputs.tf_dir }}/tf_plan.json"
