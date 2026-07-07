@@ -251,8 +251,8 @@ in
             # XXX I thought that a symlink would work here, but it doesn't, so
             # we must do this on every prestart. Fixes welcome.
             # rm $STATE_DIRECTORY/tahoe.cfg
-            # ln -s /etc/tahoe-lafs/introducer-${node}.cfg $STATE_DIRECTORY/tahoe.cfg
-            cp /etc/tahoe-lafs/introducer-"${node}".cfg $STATE_DIRECTORY/tahoe.cfg
+            # ln -s /etc/tahoe-lafs/introducer-${lib.escapeShellArg node}.cfg $STATE_DIRECTORY/tahoe.cfg
+            cp /etc/tahoe-lafs/introducer-${lib.escapeShellArg node}.cfg $STATE_DIRECTORY/tahoe.cfg
           '';
         }
       );
